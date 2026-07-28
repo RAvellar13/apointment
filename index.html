@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apontamento de Horas · DOJO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d0d0d; --ink-2:#1a1d21; --ink-soft:#5b6672; --ink-mute:#8a95a1;
+  --line:#ececee; --line-strong:#dcdfe3; --paper:#f5f5f2; --paper-2:#faf9f6;
+  --card:#ffffff;
+  --accent:#ff4713; --accent-2:#ff7a47; --accent-3:#ffb08a; --accent-soft:#fff1ea; --accent-tint:#ffe5d8;
+  --ok:#128a5b; --ok-soft:#e3f5ec;
+  --danger:#d33a3a; --danger-soft:#fdecec;
+  --star:#f2a916;
+  --shadow-sm:0 1px 2px rgba(13,13,13,.05);
+  --shadow:0 1px 2px rgba(13,13,13,.05),0 12px 32px -12px rgba(13,13,13,.12);
+  --shadow-lg:0 24px 60px -20px rgba(13,13,13,.22),0 2px 6px rgba(13,13,13,.06);
+  --radius:16px;
+  --brand-black:#0d0d0d; --brand-orange:#ff4713; --brand-orange-2:#ff7a47;
+  --grad-brand:linear-gradient(135deg,#ff4713 0%,#ff7a47 100%);
+  --grad-ink:linear-gradient(135deg,#0d0d0d 0%,#232527 100%);
+  --grad-paper:radial-gradient(120% 100% at 100% 0%, #ffe5d8 0%, #fff1ea 22%, #f5f5f2 55%, #faf9f6 100%);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Inter","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  background:var(--paper); color:var(--ink); line-height:1.5;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  font-feature-settings:"cv02","cv03","cv04","ss01";
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::selection{background:var(--accent);color:#fff}
+input,select{font-family:inherit;font-size:14px;color:var(--ink)}
+.hidden{display:none!important}
+h1,h2{font-family:"Space Grotesk","Inter",system-ui,sans-serif;letter-spacing:-.02em}
+
+/* LOGIN */
+.login-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:var(--grad-paper);
+  position:relative;overflow:hidden;
+}
+.login-wrap::before{
+  content:"";position:absolute;inset:auto -20% -40% auto;width:70vw;height:70vw;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(255,71,19,.18), transparent 70%);
+  filter:blur(20px);pointer-events:none;
+}
+.login-wrap::after{
+  content:"";position:absolute;left:-15%;top:-25%;width:55vw;height:55vw;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(13,13,13,.08), transparent 70%);
+  filter:blur(20px);pointer-events:none;
+}
+.login-card{
+  position:relative;z-index:1;
+  background:var(--card);border:1px solid var(--line);border-radius:24px;
+  box-shadow:var(--shadow-lg);
+  width:100%;max-width:420px;padding:40px 36px;
+}
+.login-card::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:4px;border-radius:24px 24px 0 0;
+  background:var(--grad-brand);
+}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.brand .dot svg{width:100%;height:auto;display:block}
+.logo-dojo{width:100%;height:100%;object-fit:contain;display:block}
+.brand .dot{
+  width:108px;height:108px;display:flex;align-items:center;justify-content:center;
+  padding:0;background:transparent;border:none;
+}
+.brand b{
+  font-family:"Space Grotesk","Inter",sans-serif;
+  font-size:18px;letter-spacing:.02em;font-weight:700;color:var(--ink);
+}
+.login-card h1{
+  font-size:26px;line-height:1.15;margin-bottom:8px;display:flex;align-items:center;gap:10px;
+  font-weight:800;letter-spacing:-.03em;
+}
+.login-card h1 .arw{flex-shrink:0}
+.login-card p.sub{color:var(--ink-soft);font-size:14px;margin-bottom:26px;max-width:34ch}
+label.field{display:block;font-size:11.5px;font-weight:700;color:var(--ink-soft);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em}
+.txt{
+  width:100%;padding:13px 15px;border:1.5px solid var(--line-strong);border-radius:12px;
+  background:#fff;transition:border-color .15s, box-shadow .15s, background .15s;font-weight:500;
+}
+.txt:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 18px;border-radius:12px;font-weight:600;font-size:14px;
+  transition:transform .1s ease, filter .15s ease, background .15s ease, box-shadow .15s ease;
+  letter-spacing:-.005em;
+}
+.btn-primary{
+  background:var(--grad-brand);color:#fff;width:100%;margin-top:20px;
+  box-shadow:0 8px 20px -8px rgba(255,71,19,.55), inset 0 1px 0 rgba(255,255,255,.25);
+}
+.btn-primary:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{background:#fff;border:1.5px solid var(--line-strong);color:var(--ink);font-weight:600}
+.btn-ghost:hover{background:var(--paper);border-color:var(--ink)}
+.err{color:var(--danger);font-size:13px;margin-top:12px;min-height:18px;font-weight:500}
+.hint{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-soft)}
+.hint code{background:var(--accent-soft);color:var(--accent);padding:2px 6px;border-radius:5px;font-size:12px}
+#gsiButton{display:flex;justify-content:center;min-height:44px;margin-bottom:4px}
+.gsi-note{background:#fff8ec;border:1px solid #f2d48a;color:#7a5710;border-radius:12px;padding:12px 15px;font-size:12.5px;line-height:1.5;margin-bottom:4px}
+.dev-login{margin-top:6px}
+.dev-sep{display:flex;align-items:center;gap:12px;margin:20px 0 16px;color:var(--ink-mute);font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+.dev-sep::before,.dev-sep::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* APP SHELL */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  background:rgba(255,255,255,.85);backdrop-filter:saturate(140%) blur(12px);
+  -webkit-backdrop-filter:saturate(140%) blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:16px;padding:12px 26px;
+}
+.topbar .brand{margin:0}
+.topbar .brand .dot{width:40px;height:40px;border-radius:10px;padding:4px}
+.topbar .brand b{font-size:14.5px;letter-spacing:.02em;font-weight:700}
+.spacer{flex:1}
+.who{text-align:right;line-height:1.25}
+.who .nm{font-weight:600;font-size:14px;color:var(--ink)}
+.who .rl{font-size:11.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.tabs{
+  display:flex;gap:4px;background:var(--paper);
+  border:1px solid var(--line);border-radius:12px;padding:4px;
+}
+.tab{
+  padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;color:var(--ink-soft);
+  transition:background .15s, color .15s, box-shadow .15s;letter-spacing:-.005em;
+}
+.tab:hover{color:var(--ink)}
+.tab.active{background:#fff;color:var(--ink);box-shadow:var(--shadow-sm), 0 0 0 1px var(--line)}
+.tab.admin-only::after{
+  content:"ADMIN";font-size:9px;background:var(--grad-brand);color:#fff;
+  padding:2px 6px;border-radius:5px;margin-left:7px;vertical-align:middle;
+  letter-spacing:.08em;font-weight:800;
+}
+
+.wrap{max-width:1200px;margin:0 auto;padding:30px 26px 72px}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;
+  transition:box-shadow .2s ease, transform .2s ease;
+}
+.card-h{
+  padding:18px 22px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;
+  background:linear-gradient(180deg, #fff 0%, #fbfbf9 100%);
+}
+.card-h h2{font-size:15px;font-weight:700;letter-spacing:-.015em}
+.card-h .sub{font-size:12.5px;color:var(--ink-soft);font-weight:500}
+.card-b{padding:22px}
+.card-icon{width:60px;height:60px;object-fit:contain;margin-right:6px;vertical-align:middle;display:block}
+
+/* KPI row */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+@media(max-width:640px){.kpis{grid-template-columns:1fr}}
+.kpi{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.kpi::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(80% 100% at 100% 0%, rgba(255,71,19,.05), transparent 60%);
+}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.kpi .lb{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}
+.kpi .vl{
+  font-family:"Space Grotesk","Inter",sans-serif;
+  font-size:34px;font-weight:700;letter-spacing:-.035em;margin-top:6px;color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.kpi .un{font-size:15px;font-weight:600;color:var(--ink-soft);letter-spacing:0}
+.kpi.lit .vl{background:linear-gradient(135deg,#0f7a52,#26b37f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.kpi.rem .vl{background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+.kpi .bar{position:absolute;left:0;bottom:0;height:3px;background:var(--grad-brand)}
+.kpi.lit .bar{background:linear-gradient(90deg,#0f7a52,#26b37f)}
+
+/* form row */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg{margin-bottom:15px}
+.fg label{display:block;font-size:11px;font-weight:700;color:var(--ink-soft);margin-bottom:7px;text-transform:uppercase;letter-spacing:.08em}
+.sel,.num,.date{
+  width:100%;padding:11px 13px;border:1.5px solid var(--line-strong);border-radius:11px;
+  background:#fff;transition:border-color .15s, box-shadow .15s;font-weight:500;
+}
+.sel:focus,.num:focus,.date:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.starbtn{margin-left:8px;font-size:16px;color:var(--line-strong);transition:.15s;vertical-align:middle}
+.starbtn:hover{color:var(--star);transform:scale(1.15)}
+.starbtn.on{color:var(--star);text-shadow:0 0 12px rgba(242,169,22,.4)}
+.fav-line{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.fav-note{font-size:12px;color:var(--ink-soft);margin-top:8px;line-height:1.5}
+
+/* calendar */
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.cal-head .mn{font-family:"Space Grotesk",sans-serif;font-size:16px;font-weight:700;text-transform:capitalize;letter-spacing:-.015em}
+.cal-nav{display:flex;gap:6px}
+.cal-nav button{
+  width:32px;height:32px;border-radius:9px;border:1.5px solid var(--line-strong);
+  background:#fff;font-size:15px;color:var(--ink-soft);font-weight:700;transition:.15s;
+}
+.cal-nav button:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal .dow{text-align:center;font-size:10.5px;font-weight:700;color:var(--ink-mute);padding:4px 0;text-transform:uppercase;letter-spacing:.08em}
+.cal .cell{
+  aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;font-size:13px;font-weight:500;
+  position:relative;border:1.5px solid transparent;transition:transform .1s, box-shadow .15s;
+}
+.cal .cell.empty{background:transparent}
+.cal .cell.wknd{color:var(--line-strong)}
+.cal .cell.wday{background:var(--paper-2);color:var(--ink);border-color:var(--line)}
+.cal .cell.today{border:2px solid var(--accent);font-weight:800;color:var(--accent);background:var(--accent-soft)}
+.cal .cell.logged{background:var(--ok-soft);color:var(--ok);font-weight:700;border-color:#8dd4b3}
+.cal .cell.feriado{background:#f4ecff;color:#7c4dd6;border:1.5px solid #d9c4f5}
+.cal .cell.diverge{background:#fff4d6;color:#8a6412;font-weight:700;border-color:#f2d48a}
+.cal .cell.diverge .hh{color:#a9832a}
+.cal .cell.Ausência{background:#dcf5f2;color:#0f766e;border:1.5px solid #a7e3db}
+.cal .cell.Ausência .hh{color:#159384;text-transform:capitalize}
+.cal .cell.feriado .hh{color:#9370d0}
+.cal .cell.pick{cursor:pointer}
+.cal .cell.pick:hover{transform:translateY(-2px);box-shadow:0 6px 14px -4px rgba(13,13,13,.15)}
+.cal .cell.selected{outline:3px solid var(--accent);outline-offset:-1px;box-shadow:0 0 0 4px var(--accent-soft)}
+.cal .cell.future{opacity:.4}
+.cal .cell .hh{font-size:9px;font-weight:800;margin-top:2px;letter-spacing:.02em}
+.cal-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px;font-size:11.5px;color:var(--ink-soft);font-weight:500}
+.cal-legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.lg-logged i{background:var(--ok-soft);border:1.5px solid #8dd4b3}
+.lg-diverge i{background:#fff4d6;border:1.5px solid #f2d48a}
+.lg-today i{background:var(--accent-soft);border:2px solid var(--accent)}
+.lg-feriado i{background:#f4ecff;border:1.5px solid #d9c4f5}
+.lg-Ausência i{background:#dcf5f2;border:1.5px solid #a7e3db}
+.lg-wday i{background:var(--paper-2);border:1.5px solid var(--line-strong)}
+
+/* entries list */
+.entries{display:flex;flex-direction:column}
+.entry-wrap{padding:14px 6px;border-bottom:1px solid var(--line);transition:background .15s}
+.entry-wrap:hover{background:var(--paper-2)}
+.entry-wrap:last-child{border-bottom:none}
+.entry-wrap.off{background:#fffdf5}
+.entry-wrap.off:hover{background:#fffaea}
+.entry{display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center}
+.entry .dt{font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.entry .cp b{font-size:14px;display:block;letter-spacing:-.01em;font-weight:700}
+.entry .cp span{font-size:12px;color:var(--ink-soft);font-weight:500}
+.entry .hrs{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:16px;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.015em}
+.entry-wrap.off .entry .hrs{color:#a9832a}
+.entry .hrs small{font-weight:600;font-size:11px;color:var(--ink-soft);margin-left:2px}
+.entry .del{
+  width:30px;height:30px;border-radius:9px;border:1.5px solid var(--line-strong);
+  color:var(--ink-soft);font-size:14px;display:grid;place-items:center;transition:.15s;background:#fff;
+}
+.entry .del:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
+.entry-wrap.removed{opacity:.7}
+.entry-wrap.removed .cp b,.entry-wrap.removed .cp span,.entry-wrap.removed .dt,.entry-wrap.removed .hrs{position:relative}
+.entry-wrap.removed .cp b::after,.entry-wrap.removed .cp span::after,.entry-wrap.removed .dt::after,.entry-wrap.removed .hrs::after{
+  content:"";position:absolute;left:-2px;right:-2px;top:50%;height:2px;background:var(--danger)}
+.entry-wrap.removed .hrs{color:var(--danger)}
+.entry-wrap.removed .del{border-color:var(--ok);color:var(--ok)}
+.entry-wrap.removed .del:hover{background:var(--ok-soft)}
+/* excluído pelo admin: mantém o riscado vermelho, mas botão travado (sem restaurar) */
+.entry-wrap.admin-del .del.locked{border-color:var(--line-strong);color:var(--ink-mute);background:var(--paper-2);cursor:not-allowed;opacity:.6}
+.entry-wrap.admin-del .del.locked:hover{background:var(--paper-2);border-color:var(--line-strong);color:var(--ink-mute)}
+.obs-fixed{flex:1;font-size:12.5px;padding:7px 11px;border-radius:9px;background:var(--danger-soft);border:1px solid var(--danger);color:var(--danger);font-weight:700}
+.obs-line{display:flex;align-items:center;gap:8px;margin-top:10px;padding-left:2px}
+.obs-line .obs-ic{font-size:12px;color:var(--line-strong);flex-shrink:0}
+.obs-line.flag .obs-ic{color:var(--star)}
+.obs-in{
+  flex:1;font-size:12.5px;padding:7px 11px;border:1.5px dashed var(--line-strong);border-radius:9px;
+  background:var(--paper-2);color:var(--ink);transition:.15s;font-weight:500;
+}
+.obs-in::placeholder{color:var(--ink-mute)}
+.obs-in:focus{outline:none;border-style:solid;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px var(--accent-soft)}
+.obs-line.flag .obs-in{border-color:var(--star);background:#fffdf3;border-style:solid}
+.empty-state{text-align:center;padding:44px 20px;color:var(--ink-soft)}
+.empty-state .ic{font-size:34px;margin-bottom:12px;opacity:.5}
+.empty-state b{display:block;color:var(--ink);margin-bottom:4px;font-size:14.5px;font-weight:700}
+
+/* filters (report) */
+.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:6px}
+@media(max-width:820px){.filters{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.filters{grid-template-columns:1fr}}
+
+/* report table */
+table.rep{width:100%;border-collapse:collapse;font-size:13.5px}
+table.rep th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);padding:12px 14px;border-bottom:2px solid var(--line-strong);font-weight:700;background:var(--paper-2)}
+table.rep td{padding:12px 14px;border-bottom:1px solid var(--line);font-weight:500}
+table.rep tbody tr{transition:background .15s}
+table.rep tbody tr:hover{background:var(--paper-2)}
+table.rep td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;font-family:"Space Grotesk",sans-serif;letter-spacing:-.01em}
+table.rep tfoot td{font-weight:800;border-top:2px solid var(--line-strong);border-bottom:none;padding-top:14px;font-size:14px}
+table.rep td.obs-cell{font-size:12.5px;color:var(--ink-soft);max-width:280px}
+table.rep tr.row-off td{background:#fffdf5}
+table.rep tr.row-off td.num{color:#a9832a}
+table.rep tr.row-aus td{background:#eefbf9}
+table.rep tr.row-aus td.num{color:#0f766e}
+/* registro excluído pelo admin: riscado + vermelho */
+table.rep tr.row-del td{background:var(--danger-soft)}
+table.rep tr.row-del td:nth-child(-n+5){text-decoration:line-through;text-decoration-color:var(--danger);color:var(--ink-soft)}
+table.rep tr.row-del td.obs-cell{color:var(--danger);font-weight:700;text-decoration:none}
+table.rep td.act-cell{text-align:center;width:36px;padding:6px}
+.del-rep{width:26px;height:26px;border-radius:7px;border:1px solid var(--line-strong);background:var(--card);color:var(--ink-soft);font-size:13px;line-height:1;cursor:pointer;transition:.15s}
+.del-rep:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
+table.rep tr.row-del .del-rep{border-color:var(--ok);color:var(--ok)}
+table.rep tr.row-del .del-rep:hover{background:var(--ok-soft)}
+.tag-aus{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#0f766e;background:#dcf5f2;border:1px solid #a7e3db;padding:2px 7px;border-radius:20px;margin-left:6px;vertical-align:middle}
+.rep-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;align-items:start}
+@media(max-width:900px){.rep-grid{grid-template-columns:1fr}}
+tr.sum-under td.num{color:#8a6412}
+tr.sum-under{background:#fff9ec}
+tr.sum-over td.num{color:var(--danger)}
+tr.sum-over{background:var(--danger-soft)}
+tr.sum-exact td.num{color:var(--ok)}
+tr.sum-under td:nth-child(3),tr.sum-over td:nth-child(3){color:var(--ink-soft)!important}
+.sum-legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;font-size:11.5px;color:var(--ink-soft);font-weight:500}
+.sum-legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.sum-legend .sw-under{background:#fff9ec;border:1.5px solid #f2d48a}
+.sum-legend .sw-over{background:var(--danger-soft);border:1.5px solid var(--danger)}
+
+/* ranking */
+.rank{display:flex;flex-direction:column;gap:10px}
+.rank .row{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center}
+.rank .rk{font-family:"Space Grotesk",sans-serif;font-weight:800;font-size:13px;color:var(--ink-mute);text-align:right}
+.rank .row:nth-child(1) .rk{color:var(--accent)}
+.rank .info{min-width:0}
+.rank .nm{font-size:13.5px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank .cl{font-size:11.5px;color:var(--ink-soft);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank .track{height:6px;background:var(--paper-2);border-radius:4px;margin-top:6px;overflow:hidden;border:1px solid var(--line)}
+.rank .fill{height:100%;background:linear-gradient(90deg,var(--accent),#ff8a5c);border-radius:4px}
+.rank .hh{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.015em}
+.rank .hh small{font-weight:600;font-size:11px;color:var(--ink-soft);margin-left:2px}
+.rank .empty-r{text-align:center;color:var(--ink-soft);padding:22px 8px;font-size:13px}
+/* bloco de ausências (abaixo do ranking) */
+.aus-block{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.aus-title{font-size:13px;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+.aus-title .sub{font-weight:500;color:var(--ink-soft);text-transform:capitalize;margin-left:4px}
+table.aus-table{width:100%;border-collapse:collapse}
+table.aus-table th{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+table.aus-table td{font-size:12.5px;padding:8px;border-bottom:1px solid var(--line)}
+table.aus-table tr:last-child td{border-bottom:none}
+
+/* provisão de descanso */
+.prov-locked{background:linear-gradient(180deg,#fff8ec,#fff3d9);border:1px solid #f2d48a;color:#6b4d0a;border-radius:var(--radius);padding:14px 16px;font-size:13px;line-height:1.5}
+.prov-counter{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--paper-2);margin-bottom:14px}
+.prov-counter .pc-main{display:flex;align-items:baseline;gap:6px}
+.prov-counter .pc-main span{font-family:"Space Grotesk",sans-serif;font-size:30px;font-weight:800;color:var(--accent);letter-spacing:-.02em}
+.prov-counter .pc-main small{font-size:12px;color:var(--ink-soft);font-weight:600}
+.prov-counter .pc-sub{font-size:11.5px;color:var(--ink-soft);text-align:right}
+.prov-days{font-size:12px;color:var(--ink-soft);margin:-4px 0 12px}
+.prov-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.prov-empty{font-size:12.5px;color:var(--ink-soft);text-align:center;padding:14px}
+.prov-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.prov-item .pi-period{font-size:13px;font-weight:600;flex:1}
+.prov-item .pi-period small{display:block;font-size:11px;color:var(--ink-soft);font-weight:500}
+.prov-item .pi-del{width:26px;height:26px;border-radius:7px;border:1px solid var(--line-strong);background:var(--card);color:var(--ink-soft);cursor:pointer}
+.prov-item .pi-del:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
+.prov-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.prov-badge.ok{background:var(--ok-soft);color:var(--ok);border:1px solid var(--ok)}
+.prov-badge.wait{background:#fff4d6;color:#8a6412;border:1px solid #f2d48a}
+
+/* cadastros (admin) */
+table.adm-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px}
+table.adm-table th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);padding:9px 10px;border-bottom:2px solid var(--line-strong);font-weight:700;background:var(--paper-2)}
+table.adm-table td{padding:9px 10px;border-bottom:1px solid var(--line);font-weight:500}
+table.adm-table td.adm-empty{text-align:center;color:var(--ink-soft);padding:18px}
+table.adm-table td.act-cell{width:44px;text-align:center}
+.adm-form{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:6px;border-top:1px dashed var(--line)}
+.adm-form .txt,.adm-form .date{width:auto;flex:1;min-width:130px;padding:9px 11px}
+.adm-form .btn{flex:0 0 auto}
+.btn-approve{padding:7px 14px;border-radius:8px;font-size:12.5px;font-weight:700;background:var(--ok);color:#fff;border:none;cursor:pointer}
+.btn-approve:hover{filter:brightness(1.05)}
+.btn-approve.un{background:var(--card);color:var(--ink-soft);border:1px solid var(--line-strong)}
+.ap-when{display:block;font-size:10.5px;color:var(--ink-soft);font-weight:500}
+.ap-none{color:var(--ink-soft)}
+.del-rep.locked{opacity:.45;cursor:not-allowed;border-color:var(--line);color:var(--ink-soft)}
+.del-rep.locked:hover{background:var(--card);border-color:var(--line);color:var(--ink-soft)}
+.entry-wrap.is-aus{background:#eefbf9;border-left:3px solid #0f766e}
+.entry-wrap.is-aus .cp b{color:#0f766e}
+.entry-wrap.is-aus .del.locked{border:none;background:transparent;font-size:16px;cursor:default}
+.obs-fixed.aus{background:#dcf5f2;border:1px solid #a7e3db;color:#0f766e}
+
+/* chart */
+.chartwrap{padding:8px 4px 0}
+svg.chart{width:100%;height:250px;display:block}
+.badge{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.06em;padding:4px 10px;border-radius:20px;background:var(--accent-soft);color:var(--accent);text-transform:uppercase}
+.notice{
+  background:linear-gradient(180deg,#fff8ec,#fff3d9);
+  border:1px solid #f2d48a;color:#6b4d0a;border-radius:var(--radius);
+  padding:16px 20px;margin-bottom:22px;font-size:13.5px;line-height:1.55;
+  box-shadow:var(--shadow-sm);
+}
+.notice b{color:#4a3505;font-weight:700}
+.no-loc .grid,.no-loc .kpis,.no-loc .card:last-child{display:none}
+.toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--grad-ink);color:#fff;padding:12px 22px;border-radius:12px;
+  font-size:13.5px;font-weight:600;box-shadow:var(--shadow-lg);
+  opacity:0;transition:.25s cubic-bezier(.2,.8,.2,1);z-index:60;pointer-events:none;
+  letter-spacing:-.005em;border:1px solid rgba(255,255,255,.06);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+<!-- Google Identity Services (login com Google). Requer o app hospedado em domínio autorizado. -->
+<script src="https://accounts.google.com/gsi/client" async onload="window.onGoogleLibLoad&&window.onGoogleLibLoad()"></script>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginView" class="login-wrap">
+  <div class="login-card">
+    <div class="brand">
+    <span class="dot">
+        <img src="https://dojo.technology/wp-content/uploads/2024/10/l2.svg"
+             alt="Dojo"
+             class="logo-dojo">
+    </span>
+    <b> · Apontamento</b>
+</div><h1>Entrar <svg class="arw" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 4 L15 15 M15 8 L15 15 L8 15" fill="none" stroke="#ff4713" stroke-width="3.2" stroke-linecap="square"/></svg></h1>
+    <p class="sub">Acesse com sua conta Google corporativa para lançar suas horas.</p>
+
+    <!-- Botão oficial do Google Identity Services (renderizado por JS) -->
+    <div id="gsiButton"></div>
+
+    <!-- Aviso mostrado quando o login Google não está configurado/hospedado -->
+    <div id="gsiUnavailable" class="gsi-note hidden">
+      Login com Google indisponível aqui. Ele exige o app publicado num domínio autorizado
+      (veja instruções no topo do código). Use o acesso de teste abaixo enquanto isso.
+    </div>
+
+    <!-- Acesso manual — SOMENTE PARA TESTES. Remover/ocultar em produção. -->
+    <div id="devLogin" class="dev-login">
+      <div class="dev-sep"><span>acesso de teste</span></div>
+      <label class="field" for="loginUser">Usuário (e-mail)</label>
+      <input id="loginUser" class="txt" type="text" placeholder="nome.sobrenome@dojo.technology" autocomplete="username">
+      <button class="btn btn-ghost" style="width:100%;margin-top:12px" onclick="doDevLogin()">Entrar (teste)</button>
+    </div>
+
+    <div class="err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="appView" class="hidden">
+  <div class="topbar">
+    <div class="brand"><span class="dot"><img src="https://dojo.technology/wp-content/uploads/2024/10/l2.svg"
+     alt="Dojo"
+     class="card-icon"></span><b>    · Apontamento</b></div>
+    <div class="tabs">
+      <button class="tab active" id="tabLancar" onclick="showTab('lancar')">Meu apontamento</button>
+      <button class="tab admin-only hidden" id="tabRel" onclick="showTab('rel')">Relatório</button>
+      <button class="tab admin-only hidden" id="tabAdmin" onclick="showTab('admin')">Cadastros</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="who"><div class="nm" id="whoName">—</div><div class="rl" id="whoRole">—</div></div>
+    <button class="btn btn-ghost" onclick="doLogout()">Sair</button>
+  </div>
+
+  <!-- ---- TAB: LANÇAR ---- -->
+  <div class="wrap" id="viewLancar">
+    <div class="notice hidden" id="noLoc">
+      <b>Sem locação vinculada.</b> Seu usuário tem acesso, mas não há cliente/projeto atribuído na aba <em>Locação</em>. Fale com seu gerente para incluir sua locação — enquanto isso não é possível lançar horas.
+    </div>
+    <div class="kpis">
+      <div class="kpi lit"><div class="lb">Horas lançadas no mês</div><div class="vl"><span id="kLog">0</span><span class="un"> h</span></div><div class="bar" id="kLogBar"></div></div>
+      <div class="kpi rem"><div class="lb">Horas disponíveis no mês</div><div class="vl"><span id="kAvail">0</span><span class="un"> h</span></div><div class="bar"></div></div>
+      <div class="kpi"><div class="lb">Saldo a lançar</div><div class="vl"><span id="kBal">0</span><span class="un"> h</span></div><div class="bar"></div></div>
+    </div>
+
+    <div class="grid">
+      <!-- calendar -->
+      <div class="card">
+        <div class="card-h"><h2>Calendário</h2></div>
+        <div class="card-b">
+          <div class="cal-head">
+            <span class="mn" id="calMonth"></span>
+            <div class="cal-nav"><button onclick="calMove(-1)">‹</button><button onclick="calMove(1)">›</button></div>
+          </div>
+          <div class="cal" id="cal"></div>
+          <div class="cal-legend">
+            <span class="lg-logged"><i></i>8h lançadas</span>
+            <span class="lg-diverge"><i></i>Fora do padrão</span>
+            <span class="lg-today"><i></i>Hoje</span>
+            <span class="lg-feriado"><i></i>Feriado</span>
+            <span class="lg-Ausência"><i></i>Ausência</span>
+            <span class="lg-wday"><i></i>Dia útil</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- new entry + favorites -->
+      <div class="card">
+        <div class="card-h"><h2>Lançar horas</h2></div>
+        <div class="card-b">
+          <div class="fg">
+            <label>Cliente <button class="starbtn" id="starC" onclick="toggleFav('cliente')" title="Favoritar cliente">★</button></label>
+            <select class="sel" id="inCliente" onchange="onClienteChange()"></select>
+          </div>
+          <div class="fg">
+            <label>Projeto <button class="starbtn" id="starP" onclick="toggleFav('projeto')" title="Favoritar projeto">★</button></label>
+            <select class="sel" id="inProjeto"></select>
+          </div>
+          <div class="row">
+            <div class="fg"><label>Data</label><input type="date" class="date" id="inData"></div>
+            <div class="fg"><label>Horas <button class="starbtn" id="starH" onclick="toggleFav('horas')" title="Favoritar horas">★</button></label><input type="number" class="num" id="inHoras" min="0.5" max="24" step="0.5" placeholder="8"></div>
+          </div>
+          <button class="btn btn-primary" onclick="addEntry()">Adicionar lançamento</button>
+          <p class="fav-note" id="favNote"></p>
+        </div>
+      </div>
+
+      <!-- provisão de descanso -->
+      <div class="card" id="provCard" style="margin-top:22px">
+        <div class="card-h"><h2>Provisão de descanso</h2><span class="sub">30 dias por ano de empresa</span></div>
+        <div class="card-b">
+          <div id="provLocked" class="prov-locked hidden">
+            Você ainda não completou 1 ano de empresa, então a provisão de descanso ainda não está liberada. Assim que completar, esta opção é habilitada automaticamente.
+          </div>
+          <div id="provArea">
+            <div class="prov-counter">
+              <div class="pc-main"><span id="provSaldo">0</span><small>dias disponíveis</small></div>
+              <div class="pc-sub"><span id="provInfo"></span></div>
+            </div>
+            <div class="row">
+              <div class="fg"><label>Início do descanso</label><input type="date" class="date" id="provIni"></div>
+              <div class="fg"><label>Fim do descanso</label><input type="date" class="date" id="provFim"></div>
+            </div>
+            <div class="prov-days" id="provDaysHint"></div>
+            <button class="btn btn-primary" onclick="addProvisao()">Solicitar descanso</button>
+            <div class="prov-list" id="provList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- entries list -->
+    <div class="card" style="margin-top:22px">
+      <div class="card-h"><h2>Lançamentos do mês</h2><span class="sub">cliente · projeto · horas</span></div>
+      <div class="card-b">
+        <div class="entries" id="entries"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- TAB: RELATÓRIO ---- -->
+  <div class="wrap hidden" id="viewRel">
+    <div class="card">
+      <div class="card-h"><h2>Relatório de horas</h2><span class="sub">— visão consolidada </span></div>
+      <div class="card-b">
+        <div class="filters">
+          <div class="fg"><label>Usuário</label><select class="sel" id="fUser"></select></div>
+          <div class="fg"><label>Cliente</label><select class="sel" id="fCli"></select></div>
+          <div class="fg"><label>Projeto</label><select class="sel" id="fProj"></select></div>
+          <div class="fg"><label>Mês/Ano</label><select class="sel" id="fMes"></select></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpis" style="margin-top:22px">
+      <div class="kpi rem"><div class="lb">Volume de horas (filtro)</div><div class="vl"><span id="rKpi">0</span><span class="un"> h</span></div><div class="bar"></div></div>
+      <div class="kpi"><div class="lb">Lançamentos</div><div class="vl"><span id="rCount">0</span></div><div class="bar"></div></div>
+      <div class="kpi lit"><div class="lb">Média por lançamento</div><div class="vl"><span id="rAvg">0</span><span class="un"> h</span></div><div class="bar"></div></div>
+    </div>
+
+    <div class="card" style="margin-top:22px">
+      <div class="card-h"><h2>Horas ao longo do tempo</h2><span class="sub">soma de horas por mês/ano</span></div>
+      <div class="card-b"><div class="chartwrap"><svg class="chart" id="chart" viewBox="0 0 720 250" preserveAspectRatio="none"></svg></div></div>
+    </div>
+
+    <div class="rep-grid" style="margin-top:22px">
+      <div class="card">
+        <div class="card-h"><h2>Calendário</h2><span class="sub">horas por dia (filtros aplicados)</span></div>
+        <div class="card-b">
+          <div class="cal-head">
+            <span class="mn" id="relCalMonth"></span>
+            <div class="cal-nav"><button type="button" onclick="relCalMove(-1)">‹</button><button type="button" onclick="relCalMove(1)">›</button></div>
+          </div>
+          <div class="cal" id="relCal"></div>
+          <div class="cal-legend">
+            <span class="lg-logged"><i></i>Com horas</span>
+            <span class="lg-feriado"><i></i>Feriado</span>
+            <span class="lg-Ausência"><i></i>Ausência</span>
+            <span class="lg-wday"><i></i>Dia útil</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h2>Ranking de projetos</h2><span class="sub">mais horas alocadas (filtros aplicados)</span></div>
+        <div class="card-b">
+          <div id="relRanking" class="rank"></div>
+          <div class="aus-block">
+            <div class="aus-title">Ausências no mês <span id="relAusMonth" class="sub"></span></div>
+            <table class="rep aus-table">
+              <thead><tr><th>Usuário</th><th>Tipo</th><th>Período</th></tr></thead>
+              <tbody id="relAusBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rep-grid" style="margin-top:22px">
+      <div class="card">
+        <div class="card-h"><h2>Detalhamento</h2></div>
+        <div class="card-b">
+          <table class="rep">
+            <thead><tr><th>Usuário</th><th>Cliente</th><th>Projeto</th><th>Data</th><th style="text-align:right">Horas</th><th>Observação</th><th></th></tr></thead>
+            <tbody id="repBody"></tbody>
+            <tfoot><tr><td colspan="4">Total</td><td class="num" id="repTotal">0 h</td><td></td><td></td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <h2>Resumo por usuário</h2>
+          <span class="sub">no mês selecionado</span>
+          <div style="margin-left:auto">
+            <select class="sel" id="sumSort" style="padding:6px 10px;font-size:12.5px">
+              <option value="divergentes">Ordenar: horas divergentes</option>
+              <option value="lancadas">Ordenar: horas lançadas</option>
+              <option value="usuario">Ordenar: usuário</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-b">
+          <table class="rep">
+            <thead><tr><th>Usuário</th><th style="text-align:right">Lançadas</th><th style="text-align:right">Disponíveis</th><th style="text-align:right">Divergentes</th></tr></thead>
+            <tbody id="repSummary"></tbody>
+          </table>
+          <div class="sum-legend">
+            <span><i class="sw-under"></i>Abaixo das disponíveis</span>
+            <span><i class="sw-over"></i>Acima das disponíveis</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- TAB: CADASTROS (admin) ---- -->
+  <div class="wrap hidden" id="viewAdmin">
+    <div class="card" style="margin-bottom:22px">
+      <div class="card-h"><h2>Cadastros</h2><span class="sub">gestão de dados — somente admin. Toda alteração é registrada com autor, data e hora.</span></div>
+    </div>
+
+    <!-- Locação -->
+    <div class="card" style="margin-bottom:22px">
+      <div class="card-h"><h2>Locação</h2><span class="sub">usuário · cliente · projeto · gerente</span></div>
+      <div class="card-b">
+        <table class="rep adm-table"><thead><tr><th>Pessoa</th><th>Cliente</th><th>Projeto</th><th>Gerente</th><th></th></tr></thead>
+          <tbody id="admLoc"></tbody></table>
+        <div class="adm-form">
+          <select class="sel" id="lcPessoa"></select>
+          <input class="txt" id="lcCli" placeholder="Cliente">
+          <input class="txt" id="lcProj" placeholder="Projeto">
+          <input class="txt" id="lcGer" placeholder="Gerente">
+          <button class="btn btn-primary" onclick="admAddLoc()">Adicionar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feriados -->
+    <div class="card" style="margin-bottom:22px">
+      <div class="card-h"><h2>Feriados</h2><span class="sub">data · descrição</span></div>
+      <div class="card-b">
+        <table class="rep adm-table"><thead><tr><th>Data</th><th>Descrição</th><th></th></tr></thead>
+          <tbody id="admFer"></tbody></table>
+        <div class="adm-form">
+          <input type="date" class="date" id="frData">
+          <input class="txt" id="frNome" placeholder="Descrição do feriado">
+          <button class="btn btn-primary" onclick="admAddFer()">Adicionar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ausências -->
+    <div class="card" style="margin-bottom:22px">
+      <div class="card-h"><h2>Ausências</h2><span class="sub">usuário · tipo · período · situação (descanso passa por aprovação)</span></div>
+      <div class="card-b">
+        <table class="rep adm-table"><thead><tr><th>Usuário</th><th>Tipo</th><th>Período</th><th>Situação</th><th></th></tr></thead>
+          <tbody id="admAus"></tbody></table>
+        <div class="adm-form">
+          <input class="txt" id="auUser" placeholder="usuario@dojo.technology">
+          <input class="txt" id="auTipo" placeholder="tipo (descanso, licença…)">
+          <input type="date" class="date" id="auIni">
+          <input type="date" class="date" id="auFim">
+          <button class="btn btn-primary" onclick="admAddAus()">Adicionar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solicitações de descanso (aprovação do gerente) -->
+    <div class="card" style="margin-bottom:22px">
+      <div class="card-h"><h2>Solicitações de descanso</h2><span class="sub">aprovação do gerente/admin</span></div>
+      <div class="card-b">
+        <table class="rep adm-table"><thead><tr><th>Usuário</th><th>Período</th><th>Dias</th><th>Situação</th><th>Aprovado por</th><th></th></tr></thead>
+          <tbody id="admProv"></tbody></table>
+      </div>
+    </div>
+
+    <!-- Auditoria -->
+    <div class="card">
+      <div class="card-h"><h2>Registro de alterações</h2><span class="sub">quem alterou, o quê e quando</span></div>
+      <div class="card-b">
+        <table class="rep adm-table"><thead><tr><th>Quando</th><th>Admin</th><th>Ação</th></tr></thead>
+          <tbody id="admAudit"></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   BASE — lida diretamente das abas do arquivo base_dojo.xlsx
+   Locação: quem pode apontar (usuario→cliente→projeto)
+   Usuários: quem pode logar + nível de acesso (ADMIN libera relatório)
+   ============================================================ */
+/* ============================================================
+   DADOS-BASE (copiados do arquivo). Agora EDITÁVEIS pela aba
+   "Cadastros" (somente admin) e persistidos no navegador.
+   Cada alteração registra o admin, data e hora em _audit.
+   ============================================================ */
+const SEED = {
+  locacao: [
+    {usuario:"raphael.avellar@dojo.technology", nome:"Raphael Avellar", cliente:"Interno", projeto:"Dojo Labs", gerente:"Carlos Bochnia"},
+    {usuario:"raphael.avellar@dojo.technology", nome:"Raphael Avellar", cliente:"Seara",   projeto:"Qualidade", gerente:"Carlos Bochnia"},
+    {usuario:"carlos.bochnia@dojo.technology",  nome:"Carlos Bochnia",  cliente:"Dojo",    projeto:"gerencia",  gerente:"Carlos Bochnia"}
+  ],
+  feriados: [ {data:"2026-07-09", nome:"Revolução Constitucionalista"} ],
+  ausencias: [ {usuario:"carlos.bochnia@dojo.technology", tipo:"descanso", inicio:"2026-07-01", fim:"2026-07-15"} ]
+};
+const CFG_KEY = "apont_cfg_v1";
+let CFG = load(CFG_KEY, null);
+if(!CFG){ CFG = {locacao:SEED.locacao.slice(), feriados:SEED.feriados.slice(), ausencias:SEED.ausencias.slice(), _audit:[]}; }
+if(!CFG._audit) CFG._audit=[];
+function saveCfg(){ localStorage.setItem(CFG_KEY, JSON.stringify(CFG)); }
+function auditLog(acao){
+  CFG._audit.unshift({admin: session?session.nome:'—', quando: new Date().toISOString(), acao});
+  CFG._audit = CFG._audit.slice(0,200);
+}
+/* views mutáveis apontando para o CFG */
+const LOCACAO = CFG.locacao;      // {usuario,nome,cliente,projeto,gerente}
+const USUARIOS = [
+  {usuario:"raphael.avellar@dojo.technology", nome:"Raphael Avellar", acesso:"ADMIN",   inicio:"2022-10-01", termino:""},
+  {usuario:"carlos.bochnia@dojo.technology",  nome:"Carlos Bochnia",  acesso:"gerente", inicio:"2024-01-10", termino:""}
+];
+const userRec = u => USUARIOS.find(r=>r.usuario.toLowerCase()===String(u).toLowerCase());
+/* Janela de vigência do usuário (aba Usuários: início / término). Vazio = sem limite. */
+function userWindow(u){const r=userRec(u)||{};return {inicio:r.inicio||null, termino:r.termino||null};}
+/* Feriados (editáveis) */
+const isFeriado = ymdStr => CFG.feriados.some(f=>f.data===ymdStr);
+const feriadoNome = ymdStr => (CFG.feriados.find(f=>f.data===ymdStr)||{}).nome || 'Feriado';
+/* Ausências por usuário (editáveis): tipo, início, fim (ISO). */
+const AusênciaS = CFG.ausencias;
+function AusênciaDe(usuario, ymdStr){
+  const u=String(usuario).toLowerCase();
+  return AusênciaS.find(a=>a.usuario.toLowerCase()===u && ymdStr>=a.inicio && ymdStr<=a.fim) || null;
+}
+/* Expande as ausências em lançamentos diários (dias úteis, fora de feriado),
+   dentro da janela de vigência do usuário. Cliente "Interno", projeto "Ausência". */
+function AusênciaEntries(){
+  const out=[];
+  AusênciaS.forEach(a=>{
+    const {inicio,termino}=userWindow(a.usuario);
+    const start=new Date(a.inicio+'T00:00'), end=new Date(a.fim+'T00:00');
+    for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)){
+      const w=d.getDay(); if(w===0||w===6) continue;
+      const key=`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+      if(isFeriado(key)) continue;
+      if(inicio && key<inicio) continue;
+      if(termino && key>termino) continue;
+      out.push({id:`aus-${a.usuario}-${key}`, usuario:a.usuario, cliente:"Interno", projeto:"Ausência",
+                data:key, horas:HORAS_DIA, removed:false, obs:a.tipo, origem:"Ausência"});
+    }
+  });
+  return out;
+}
+const isAdmin = u => USUARIOS.some(x=>x.usuario.toLowerCase()===u.toLowerCase() && String(x.acesso).trim().toUpperCase()==="ADMIN");
+const userName = u => {const x=USUARIOS.find(r=>r.usuario.toLowerCase()===u.toLowerCase())||LOCACAO.find(r=>r.usuario.toLowerCase()===u.toLowerCase());return x?x.nome:u;};
+/* gerente do usuário (a partir da Locação) */
+const gerenteDe = u => {const r=LOCACAO.find(x=>x.usuario.toLowerCase()===String(u).toLowerCase());return r?r.gerente:'';};
+
+/* ---------- PROVISÃO DE DESCANSO ----------
+   Direito de descanso:
+   - 30 dias por ANO-CALENDÁRIO, NÃO acumulativos (a cada 1º de janeiro reinicia em 30).
+   - Carência de 90 dias a partir do 'inicio' do colaborador (aba Usuários):
+     só pode solicitar a partir de (inicio + 90 dias).
+   - No ano em que a carência termina, o direito é PROPORCIONAL aos dias restantes
+     do ano a contar do fim da carência (ex.: início 01/05 → carência até ~30/07 →
+     direito proporcional ao período 31/07–31/12 daquele ano).
+   Cada período é aprovado pelo gerente/admin. */
+const PROV_KEY = "apont_prov_v1";
+let PROV = load(PROV_KEY, []); // {id,usuario,inicio,fim,dias,status,solicitadoEm,aprovadoPor,aprovadoEm}
+function saveProv(){ localStorage.setItem(PROV_KEY, JSON.stringify(PROV)); }
+function addDays(d, n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function ymdOf(d){ return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+/* fim da carência = início + 90 dias (data a partir da qual pode solicitar) */
+function fimCarencia(u){
+  const r=userRec(u); if(!r||!r.inicio) return null;
+  return addDays(new Date(r.inicio+'T00:00'), 90);
+}
+/* dias corridos entre duas datas ISO (inclusive) */
+function diasPeriodo(ini,fim){
+  const a=new Date(ini+'T00:00'), b=new Date(fim+'T00:00');
+  return Math.floor((b-a)/86400000)+1;
+}
+/* elegível se já passou a carência de 90 dias */
+function elegivelDescanso(u){
+  const fc=fimCarencia(u); if(!fc) return false;
+  const hoje=new Date(); hoje.setHours(0,0,0,0);
+  return hoje>=fc;
+}
+/* direito (dias) para um ano-calendário específico:
+   - anos após o de liberação: 30 fixos
+   - ano em que a carência termina: proporcional aos dias restantes do ano
+     a partir do fim da carência (30 * diasRestantes / diasNoAno)
+   - anos antes da liberação: 0 */
+function direitoAno(u, ano){
+  const fc=fimCarencia(u); if(!fc) return 0;
+  const anoLib=fc.getFullYear();
+  if(ano<anoLib) return 0;
+  if(ano>anoLib) return 30;
+  // ano de liberação → proporcional
+  const fimAno=new Date(ano,11,31);
+  const diasNoAno=diasPeriodo(`${ano}-01-01`, `${ano}-12-31`); // 365/366
+  const diasRestantes=Math.floor((fimAno-fc)/86400000)+1;
+  return Math.round(30 * diasRestantes / diasNoAno);
+}
+/* dias já provisionados por um usuário em um ano (pelo ano do INÍCIO do período) */
+function usadosAno(u, ano){
+  return PROV.filter(p=>p.usuario.toLowerCase()===String(u).toLowerCase()
+                        && new Date(p.inicio+'T00:00').getFullYear()===ano)
+             .reduce((s,p)=>s+(p.dias||diasPeriodo(p.inicio,p.fim)),0);
+}
+/* saldo do ano (padrão: ano corrente) — NÃO acumula entre anos */
+function saldoDescanso(u, ano){
+  ano = ano || new Date().getFullYear();
+  const direito=direitoAno(u, ano);
+  const usados=usadosAno(u, ano);
+  return {ano, direito, usados, saldo: direito-usados};
+}
+
+const STORE_KEY = "apont_dojo_v1";
+const FAV_KEY   = "apont_fav_v1";
+const SESS_KEY  = "apont_sess_v1";
+const HORAS_DIA = 8; // jornada padrão por dia — lançar diferente disso destaca em amarelo
+let state = load(STORE_KEY, {entries:[]});   // {id,usuario,cliente,projeto,data,horas,removed,obs}
+let favs  = load(FAV_KEY, {});               // { usuario: {cliente, projeto, horas} }
+let session = null;
+let calRef = new Date();
+let relRef = new Date();
+
+function load(k,def){try{return JSON.parse(localStorage.getItem(k))||def}catch{return def}}
+function save(){localStorage.setItem(STORE_KEY,JSON.stringify(state));localStorage.setItem(FAV_KEY,JSON.stringify(favs))}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200)}
+function fmt(n){return (Math.round(n*100)/100).toString().replace('.',',')}
+function ymd(d){return d.toISOString().slice(0,10)}
+
+/* ============================================================
+   LOGIN COM GOOGLE — PASSOS PARA PRODUÇÃO
+   ------------------------------------------------------------
+   1) No Google Cloud Console (console.cloud.google.com):
+        · Crie um projeto (ou use um existente da Dojo).
+        · APIs & Services → Credentials → Create credentials
+          → OAuth client ID → Web application.
+        · Em "Authorized JavaScript origins", cadastre a URL
+          onde o app será hospedado (ex.: https://apontamento.dojo.technology).
+          O login NÃO funciona em file:// nem em origem não cadastrada.
+        · Copie o "Client ID" gerado.
+   2) Cole o Client ID em GOOGLE_CLIENT_ID abaixo.
+   3) (Recomendado) Restrinja ao domínio da empresa: mantenha
+      HOSTED_DOMAIN = "dojo.technology" — só contas @dojo.technology entram.
+   4) IMPORTANTE (segurança): este arquivo valida o login apenas no
+      navegador, o que serve para experiência de uso, não como barreira
+      real. Em produção, o token (credential JWT) devolvido pelo Google
+      DEVE ser validado no servidor antes de liberar dados. Enquanto não
+      houver backend, "admin" e "cada um vê sua locação" são apenas de
+      interface. O ponto marcado // TODO(backend) abaixo é onde o envio
+      ao servidor entra.
+   5) Em produção, oculte o bloco de "acesso de teste" (id="devLogin").
+   ============================================================ */
+const GOOGLE_CLIENT_ID = ""; // <-- cole aqui o Client ID (ex.: "1234-abc.apps.googleusercontent.com")
+const HOSTED_DOMAIN    = "dojo.technology"; // restringe ao domínio corporativo; deixe "" para permitir qualquer conta
+
+/* decodifica o payload do JWT do Google (apenas leitura de e-mail/nome no cliente) */
+function decodeJwt(t){try{const p=t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');return JSON.parse(decodeURIComponent(escape(atob(p))))}catch{return null}}
+
+/* Callback do Google Identity Services */
+function handleGoogleCredential(resp){
+  // TODO(backend): enviar resp.credential ao servidor e validar a assinatura
+  // do JWT (endpoint tokeninfo do Google ou biblioteca oficial) antes de confiar.
+  const data = decodeJwt(resp.credential);
+  const err = document.getElementById('loginErr');
+  if(!data || !data.email){err.textContent="Não foi possível ler a conta Google.";return}
+  if(HOSTED_DOMAIN && (data.hd||"").toLowerCase()!==HOSTED_DOMAIN.toLowerCase()){
+    err.textContent=`Use uma conta @${HOSTED_DOMAIN}.`;return;
+  }
+  loginAs(data.email);
+}
+
+/* Inicializa o botão do Google; se não configurado, mostra o aviso e o acesso de teste */
+function initGoogleLogin(){
+  const btnHost=document.getElementById('gsiButton');
+  const unavailable=document.getElementById('gsiUnavailable');
+  const ready = GOOGLE_CLIENT_ID && window.google && google.accounts && google.accounts.id;
+  if(!ready){
+    btnHost.classList.add('hidden');
+    unavailable.classList.remove('hidden');
+    return;
+  }
+  google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID, callback:handleGoogleCredential, hosted_domain:HOSTED_DOMAIN||undefined});
+  google.accounts.id.renderButton(btnHost,{theme:"filled_blue",size:"large",width:332,text:"signin_with",locale:"pt-BR"});
+  unavailable.classList.add('hidden');
+}
+
+/* ---------- LOGIN COMUM (Google ou teste) ---------- */
+function loginAs(email){
+  const u=String(email||'').trim().toLowerCase();
+  const err=document.getElementById('loginErr');
+  if(!u){err.textContent="Informe seu usuário.";return false}
+  const acc = USUARIOS.find(r=>r.usuario.toLowerCase()===u);
+  if(!acc){err.textContent="Conta não encontrada na base de usuários. Fale com o gestor.";return false}
+  const rows = LOCACAO.filter(r=>r.usuario.toLowerCase()===u);
+  session = {usuario:acc.usuario, nome:acc.nome, admin:isAdmin(acc.usuario), rows};
+  localStorage.setItem(SESS_KEY, session.usuario);
+  err.textContent="";
+  enterApp();
+  return true;
+}
+/* Acesso de teste (input manual) — remover/ocultar em produção */
+function doDevLogin(){ loginAs(document.getElementById('loginUser').value); }
+
+function doLogout(){
+  localStorage.removeItem(SESS_KEY);
+  try{ if(window.google&&google.accounts&&google.accounts.id) google.accounts.id.disableAutoSelect(); }catch{}
+  session=null; location.reload();
+}
+function tryRestore(){
+  const u = localStorage.getItem(SESS_KEY);
+  if(!u) return;
+  const acc = USUARIOS.find(r=>r.usuario.toLowerCase()===u.toLowerCase());
+  if(acc){const rows=LOCACAO.filter(r=>r.usuario.toLowerCase()===u.toLowerCase());session={usuario:acc.usuario,nome:acc.nome,admin:isAdmin(acc.usuario),rows};enterApp()}
+}
+
+function enterApp(){
+  document.getElementById('loginView').classList.add('hidden');
+  document.getElementById('appView').classList.remove('hidden');
+  document.getElementById('whoName').textContent = session.nome;
+  document.getElementById('whoRole').textContent = session.admin ? "Administrador" : "Colaborador";
+  document.getElementById('tabRel').classList.toggle('hidden', !session.admin);
+  document.getElementById('tabAdmin').classList.toggle('hidden', !session.admin);
+  document.getElementById('inData').value = ymd(new Date());
+  calRef = new Date();
+  const hasLoc = session.rows.length>0;
+  document.getElementById('viewLancar').classList.toggle('no-loc', !hasLoc);
+  document.getElementById('noLoc').classList.toggle('hidden', hasLoc);
+  if(hasLoc){ populateClientes(); applyFavs(); }
+  render();
+}
+
+/* ---------- SELECTS (only user's locação) ---------- */
+function myRows(){return session.rows}
+function myClientes(){return [...new Set(myRows().map(r=>r.cliente))]}
+function myProjetos(cli){return [...new Set(myRows().filter(r=>r.cliente===cli).map(r=>r.projeto))]}
+
+function populateClientes(){
+  const s=document.getElementById('inCliente');
+  s.innerHTML = myClientes().map(c=>`<option>${c}</option>`).join('');
+  onClienteChange();
+}
+function onClienteChange(){
+  const cli=document.getElementById('inCliente').value;
+  const s=document.getElementById('inProjeto');
+  s.innerHTML = myProjetos(cli).map(p=>`<option>${p}</option>`).join('');
+  refreshStars();
+}
+
+/* ---------- FAVORITES ---------- */
+function applyFavs(){
+  const f=favs[session.usuario];
+  if(f){
+    if(myClientes().includes(f.cliente)){document.getElementById('inCliente').value=f.cliente;onClienteChange();}
+    if(f.projeto && myProjetos(document.getElementById('inCliente').value).includes(f.projeto)){document.getElementById('inProjeto').value=f.projeto;}
+    if(f.horas){document.getElementById('inHoras').value=f.horas;}
+  }
+  refreshStars();
+  updateFavNote();
+}
+function toggleFav(kind){
+  const f = favs[session.usuario] || {};
+  const cli=document.getElementById('inCliente').value, proj=document.getElementById('inProjeto').value;
+  if(kind==='cliente'){ f.cliente = (f.cliente===cli)?null:cli; }
+  if(kind==='projeto'){ f.projeto = (f.projeto===proj)?null:proj; f.cliente=f.cliente||cli; }
+  if(kind==='horas'){
+    const h=parseFloat(document.getElementById('inHoras').value);
+    if(f.horas && f.horas===h){ f.horas=null; }
+    else { if(!h||h<=0){toast("Informe as horas para favoritar");return} f.horas=h; }
+  }
+  favs[session.usuario]=f; save(); refreshStars(); updateFavNote();
+  toast("Favoritos atualizados");
+}
+function refreshStars(){
+  const f=favs[session.usuario]||{};
+  document.getElementById('starC').classList.toggle('on', f.cliente===document.getElementById('inCliente').value);
+  document.getElementById('starP').classList.toggle('on', !!f.projeto && f.projeto===document.getElementById('inProjeto').value);
+  document.getElementById('starH').classList.toggle('on', !!f.horas && f.horas===parseFloat(document.getElementById('inHoras').value));
+}
+function updateFavNote(){
+  const f=favs[session.usuario]||{};
+  const n=document.getElementById('favNote');
+  const parts=[];
+  if(f.cliente) parts.push(f.cliente);
+  if(f.projeto) parts.push(f.projeto);
+  if(f.horas) parts.push(`${fmt(f.horas)}h`);
+  if(parts.length) n.textContent=`★ Favorito: ${parts.join(' · ')} (abre já preenchido)`;
+  else n.textContent="Marque as estrelas para favoritar cliente, projeto e horas — abrem já preenchidos.";
+}
+
+/* ---------- ENTRIES ---------- */
+function addEntry(){
+  const cli=document.getElementById('inCliente').value;
+  const proj=document.getElementById('inProjeto').value;
+  const data=document.getElementById('inData').value;
+  const horas=parseFloat(document.getElementById('inHoras').value);
+  if(!cli||!proj){toast("Selecione cliente e projeto");return}
+  if(!data){toast("Informe a data");return}
+  if(!horas||horas<=0){toast("Informe as horas");return}
+  state.entries.push({id:Date.now()+Math.random(), usuario:session.usuario, cliente:cli, projeto:proj, data, horas, removed:false});
+  save();
+  // mantém as horas favoritas preenchidas; senão limpa
+  const f=favs[session.usuario]||{};
+  document.getElementById('inHoras').value = f.horas ? f.horas : "";
+  refreshStars();
+  render();
+  toast(`Lançado: ${fmt(horas)}h`);
+}
+function toggleRemove(id){
+  const e=state.entries.find(x=>x.id===id); if(!e)return;
+  e.removed=!e.removed; save(); render();
+}
+function setObs(id, val){
+  const e=state.entries.find(x=>x.id===id); if(!e)return;
+  e.obs=val.trim(); save();
+}
+/* Exclusão de um registro pelo Admin (a partir do Detalhamento do relatório).
+   Mantém o registro visível, riscado, com observação "excluído por <admin>",
+   e o remove dos totais/KPIs/resumo/gráfico. */
+function adminDelete(id){
+  if(!session||!session.admin) return;
+  const e=state.entries.find(x=>String(x.id)===String(id)); if(!e)return;
+  if(e.adminDeleted){ // desfazer
+    delete e.adminDeleted; delete e.deletedBy;
+  } else {
+    e.adminDeleted=true; e.deletedBy=session.nome;
+  }
+  save(); renderReport();
+}
+
+/* ---------- BUSINESS DAYS (exclui fins de semana e feriados) ---------- */
+function pad2(n){return String(n).padStart(2,'0')}
+function businessDaysInMonth(y,m){let c=0;const d=new Date(y,m,1);while(d.getMonth()===m){const w=d.getDay();const key=`${y}-${pad2(m+1)}-${pad2(d.getDate())}`;if(w!==0&&w!==6&&!isFeriado(key))c++;d.setDate(d.getDate()+1);}return c;}
+/* dias úteis no mês, limitados à janela do usuário (início/término da aba Usuários) */
+function businessDaysForUser(y,m,usuario){
+  const {inicio,termino}=userWindow(usuario);
+  let c=0;const d=new Date(y,m,1);
+  while(d.getMonth()===m){
+    const w=d.getDay();
+    const key=`${y}-${pad2(m+1)}-${pad2(d.getDate())}`;
+    const inWin = (!inicio || key>=inicio) && (!termino || key<=termino);
+    const ausente = !!AusênciaDe(usuario, key);
+    if(w!==0&&w!==6&&!isFeriado(key)&&inWin&&!ausente)c++;
+    d.setDate(d.getDate()+1);
+  }
+  return c;
+}
+function availHoursForUser(y,m,usuario){return businessDaysForUser(y,m,usuario)*HORAS_DIA;}
+/* dias úteis do mês na janela do usuário, SEM descontar ausências
+   (usado no resumo do relatório, onde a ausência entra como horas lançadas) */
+function businessDaysFull(y,m,usuario){
+  const {inicio,termino}=userWindow(usuario);
+  let c=0;const d=new Date(y,m,1);
+  while(d.getMonth()===m){
+    const w=d.getDay();
+    const key=`${y}-${pad2(m+1)}-${pad2(d.getDate())}`;
+    const inWin = (!inicio || key>=inicio) && (!termino || key<=termino);
+    if(w!==0&&w!==6&&!isFeriado(key)&&inWin)c++;
+    d.setDate(d.getDate()+1);
+  }
+  return c;
+}
+function availHoursFull(y,m,usuario){return businessDaysFull(y,m,usuario)*HORAS_DIA;}
+
+/* ---------- RENDER (timesheet) ---------- */
+function myMonthEntries(){
+  const y=calRef.getFullYear(), m=calRef.getMonth();
+  return state.entries.filter(e=>e.usuario===session.usuario && (()=>{const d=new Date(e.data+'T00:00');return d.getFullYear()===y&&d.getMonth()===m})());
+}
+/* lançamentos reais do mês + ausências (virtuais) do usuário, para a LISTA */
+function myMonthListEntries(){
+  const y=calRef.getFullYear(), m=calRef.getMonth();
+  const aus=AusênciaEntries().filter(e=>e.usuario===session.usuario && (()=>{const d=new Date(e.data+'T00:00');return d.getFullYear()===y&&d.getMonth()===m})());
+  return myMonthEntries().concat(aus);
+}
+function render(){
+  renderKpis(); renderCalendar(); renderEntries(); renderProvisao();
+}
+function renderKpis(){
+  const active=myMonthEntries().filter(e=>!e.removed && !e.adminDeleted);
+  const logged=active.reduce((s,e)=>s+e.horas,0);
+  const avail=availHoursForUser(calRef.getFullYear(),calRef.getMonth(),session.usuario);
+  document.getElementById('kLog').textContent=fmt(logged);
+  document.getElementById('kAvail').textContent=fmt(avail);
+  document.getElementById('kBal').textContent=fmt(Math.max(0,avail-logged));
+  document.getElementById('kLogBar').style.width=Math.min(100,(logged/avail)*100)+'%';
+}
+function renderCalendar(){
+  const y=calRef.getFullYear(), m=calRef.getMonth();
+  const monthName=calRef.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  document.getElementById('calMonth').textContent=monthName;
+  const first=new Date(y,m,1).getDay();
+  const days=new Date(y,m+1,0).getDate();
+  const today=new Date(); today.setHours(0,0,0,0);
+  // horas por dia (ativas)
+  const perDay={};
+  myMonthEntries().filter(e=>!e.removed && !e.adminDeleted).forEach(e=>{const d=parseInt(e.data.slice(8,10));perDay[d]=(perDay[d]||0)+e.horas});
+  let html=['dom','seg','ter','qua','qui','sex','sáb'].map(d=>`<div class="dow">${d}</div>`).join('');
+  for(let i=0;i<first;i++)html+='<div class="cell empty"></div>';
+  const selKey = document.getElementById('inData').value; // dia selecionado no form
+  for(let d=1;d<=days;d++){
+    const date=new Date(y,m,d);const w=date.getDay();const wknd=(w===0||w===6);
+    const key=`${y}-${pad2(m+1)}-${pad2(d)}`;
+    const feriado=isFeriado(key);
+    const aus=AusênciaDe(session.usuario, key);
+    const isToday=date.getTime()===today.getTime();
+    const isFuture=date.getTime()>today.getTime();
+    const logged=perDay[d];
+    let cls='cell '+(wknd?'wknd':'wday');
+    if(feriado) cls='cell feriado';
+    if(aus) cls='cell Ausência';
+    if(logged){ cls = (Math.abs(logged-HORAS_DIA)>0.001) ? 'cell diverge' : 'cell logged'; }
+    if(isToday) cls+=' today';
+    if(isFuture&&!logged&&!feriado&&!aus) cls+=' future';
+    if(key===selKey) cls+=' selected';
+    cls+=' pick'; // todos os dias são clicáveis para selecionar a data
+    const ausTag = aus ? `<span class="hh">${aus.tipo}</span>` : '';
+    const tag = logged ? `<span class="hh">${fmt(logged)}h</span>` : (feriado?`<span class="hh">feriado</span>`:ausTag);
+    const titleParts=[];
+    if(feriado) titleParts.push('Feriado');
+    if(aus) titleParts.push(`Ausência: ${aus.tipo}`);
+    if(logged&&Math.abs(logged-HORAS_DIA)>0.001) titleParts.push(`Fora do padrão (${fmt(logged)}h)`);
+    const title = (titleParts.length?titleParts.join(' — ')+' — ':'')+`Clique para lançar em ${date.toLocaleDateString('pt-BR')}`;
+    html+=`<div class="${cls}" title="${title}" onclick="pickDay('${key}')">${d}${tag}</div>`;
+  }
+  document.getElementById('cal').innerHTML=html;
+}
+function pickDay(key){
+  document.getElementById('inData').value=key;
+  // se o dia clicado não é do mês exibido, sincroniza o calendário
+  const [y,m]=key.split('-').map(Number);
+  if(y!==calRef.getFullYear()||m-1!==calRef.getMonth()){calRef=new Date(y,m-1,1);}
+  render();
+  document.getElementById('inHoras').focus();
+}
+function renderEntries(){
+  const list=myMonthListEntries().sort((a,b)=>a.data<b.data?1:-1);
+  const box=document.getElementById('entries');
+  if(!list.length){box.innerHTML=`<div class="empty-state"><div class="ic">◷</div><b>Nenhum lançamento neste mês</b>Selecione cliente, projeto e horas para começar.</div>`;return}
+  box.innerHTML=list.map(e=>{
+    const d=new Date(e.data+'T00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+    // linha de AUSÊNCIA (virtual, somente leitura)
+    if(e.origem==='Ausência'){
+      return `<div class="entry-wrap is-aus">
+        <div class="entry">
+          <span class="dt">${d}</span>
+          <div class="cp"><b>${e.cliente}</b><span>Ausência${e.obs?` · ${e.obs}`:''}</span></div>
+          <span class="hrs">${fmt(e.horas)}<small>h</small></span>
+          <span class="del locked" title="Ausência aprovada — não editável">🌴</span>
+        </div>
+        <div class="obs-line">
+          <span class="obs-ic" title="Ausência">✎</span>
+          <span class="obs-fixed aus">Ausência (${e.obs||'descanso'})</span>
+        </div>
+      </div>`;
+    }
+    const off = Math.abs(e.horas-HORAS_DIA)>0.001;
+    const adminDel = !!e.adminDeleted;
+    const struck = e.removed || adminDel;               // aparência de riscado
+    const needsNote = struck || off;
+    const ph = e.removed ? 'Motivo da exclusão…' : (off ? `Observação (lançado ${fmt(e.horas)}h)…` : 'Observação…');
+    // observação: se excluído pelo admin, texto fixo e sem edição
+    const obsField = adminDel
+      ? `<span class="obs-fixed">Excluído por ${(e.deletedBy||'Admin').replace(/</g,'&lt;')}${e.obs?` · ${e.obs.replace(/</g,'&lt;')}`:''}</span>`
+      : `<input class="obs-in" type="text" value="${(e.obs||'').replace(/"/g,'&quot;')}" placeholder="${ph}" onchange="setObs(${e.id}, this.value)">`;
+    // botão: usuário só pode excluir/restaurar os PRÓPRIOS (removed); exclusão do admin não é restaurável aqui
+    const delBtn = adminDel
+      ? `<button class="del locked" title="Excluído pelo administrador" disabled>✕</button>`
+      : `<button class="del" title="${e.removed?'Restaurar':'Excluir'}" onclick="toggleRemove(${e.id})">${e.removed?'↺':'✕'}</button>`;
+    return `<div class="entry-wrap ${struck?'removed':''} ${off&&!struck?'off':''} ${adminDel?'admin-del':''}">
+      <div class="entry">
+        <span class="dt">${d}</span>
+        <div class="cp"><b>${e.cliente}</b><span>${e.projeto}</span></div>
+        <span class="hrs">${fmt(e.horas)}<small>h</small></span>
+        ${delBtn}
+      </div>
+      <div class="obs-line ${needsNote?'flag':''}">
+        <span class="obs-ic" title="${adminDel?'Excluído pelo administrador':(e.removed?'Excluído':(off?'Fora do padrão de 8h':'Observação'))}">✎</span>
+        ${obsField}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ---------- CALENDAR NAV ---------- */
+function calMove(dir){calRef=new Date(calRef.getFullYear(),calRef.getMonth()+dir,1);render();}
+
+/* ---------- PROVISÃO DE DESCANSO ---------- */
+function renderProvisao(){
+  const card=document.getElementById('provCard');
+  if(!card) return;
+  const elig=elegivelDescanso(session.usuario);
+  document.getElementById('provLocked').classList.toggle('hidden', elig);
+  document.getElementById('provArea').classList.toggle('hidden', !elig);
+  const fc=fimCarencia(session.usuario);
+  if(!elig){
+    // mensagem de carência com a data em que libera
+    if(fc){
+      document.getElementById('provLocked').innerHTML =
+        `Período de <b>carência de 90 dias</b> a partir do seu início. A provisão de descanso será liberada em <b>${fc.toLocaleDateString('pt-BR')}</b>, com dias proporcionais ao restante daquele ano.`;
+    }
+    return;
+  }
+  const anoAtual=new Date().getFullYear();
+  const {direito,usados,saldo}=saldoDescanso(session.usuario, anoAtual);
+  document.getElementById('provSaldo').textContent=saldo;
+  const anoLib=fc.getFullYear();
+  const nota = anoAtual===anoLib ? ' (proporcional — 1º ano)' : '';
+  document.getElementById('provInfo').textContent=`Ano ${anoAtual} · direito ${direito}${nota} · usados ${usados} · não acumulativo`;
+  // dica de dias do período em edição
+  const i=document.getElementById('provIni').value, f=document.getElementById('provFim').value;
+  const hint=document.getElementById('provDaysHint');
+  if(i&&f&&f>=i){
+    const anoP=new Date(i+'T00:00').getFullYear();
+    const s=saldoDescanso(session.usuario, anoP);
+    hint.textContent=`Período: ${diasPeriodo(i,f)} dia(s) · saldo de ${anoP}: ${s.saldo} dia(s)`;
+    hint.classList.remove('hidden');
+  }
+  else hint.classList.add('hidden');
+  // lista de provisões do usuário
+  const mine=PROV.filter(p=>p.usuario.toLowerCase()===session.usuario.toLowerCase())
+                 .sort((a,b)=>a.inicio<b.inicio?1:-1);
+  const box=document.getElementById('provList');
+  const fmtD=s=>new Date(s+'T00:00').toLocaleDateString('pt-BR');
+  if(!mine.length){ box.innerHTML=`<div class="prov-empty">Nenhum período solicitado ainda.</div>`; return; }
+  box.innerHTML=mine.map(p=>{
+    const aprovado = p.status==='aprovado';
+    const icon = aprovado
+      ? `<span class="prov-badge ok" title="Aprovado por ${p.aprovadoPor||'gerente'}">✔ aprovado</span>`
+      : `<span class="prov-badge wait" title="Aguardando aprovação do gerente">⏳ em requerimento</span>`;
+    return `<div class="prov-item ${aprovado?'ap':'rq'}">
+      <div class="pi-period">${fmtD(p.inicio)} – ${fmtD(p.fim)}<small>${p.dias} dia(s)</small></div>
+      ${icon}
+      ${aprovado?'':`<button class="pi-del" title="Cancelar solicitação" onclick="cancelProvisao('${p.id}')">✕</button>`}
+    </div>`;
+  }).join('');
+}
+function addProvisao(){
+  const i=document.getElementById('provIni').value, f=document.getElementById('provFim').value;
+  if(!elegivelDescanso(session.usuario)){toast('Ainda em período de carência');return;}
+  if(!i||!f){toast('Informe início e fim');return;}
+  if(f<i){toast('Fim antes do início');return;}
+  // não pode começar antes do fim da carência
+  const fc=fimCarencia(session.usuario);
+  if(fc && new Date(i+'T00:00')<fc){ toast(`Descanso só a partir de ${fc.toLocaleDateString('pt-BR')}`); return; }
+  // período deve ficar dentro de um único ano (direito é anual, não acumulativo)
+  const anoI=new Date(i+'T00:00').getFullYear(), anoF=new Date(f+'T00:00').getFullYear();
+  if(anoI!==anoF){ toast('O período deve ficar dentro de um mesmo ano'); return; }
+  const dias=diasPeriodo(i,f);
+  const {saldo,direito}=saldoDescanso(session.usuario, anoI);
+  if(direito<=0){ toast(`Sem direito a descanso em ${anoI}`); return; }
+  if(dias>saldo){toast(`Saldo de ${anoI} insuficiente: ${saldo} dia(s)`);return;}
+  PROV.push({id:'prov-'+Date.now(), usuario:session.usuario, inicio:i, fim:f, dias,
+             status:'requerido', solicitadoEm:new Date().toISOString(), aprovadoPor:'', aprovadoEm:''});
+  saveProv();
+  document.getElementById('provIni').value=''; document.getElementById('provFim').value='';
+  renderProvisao();
+  toast('Descanso solicitado — aguardando aprovação');
+}
+function cancelProvisao(id){
+  const p=PROV.find(x=>x.id===id);
+  if(!p) return;
+  if(p.status==='aprovado'){toast('Período já aprovado — fale com o gerente');return;}
+  PROV=PROV.filter(x=>x.id!==id); saveProv(); renderProvisao();
+}
+/* aprovação pelo gerente/admin (usado na aba Cadastros).
+   Ao aprovar, o descanso é computado como AUSÊNCIA (tipo "descanso"),
+   entrando no quadro de Ausências, apontamentos, calendário e relatórios.
+   Ao reverter, a ausência vinculada é removida. */
+function aprovarProvisao(id){
+  const p=PROV.find(x=>x.id===id); if(!p) return;
+  const aprovar = p.status!=='aprovado';
+  p.status = aprovar ? 'aprovado' : 'requerido';
+  p.aprovadoPor = aprovar ? session.nome : '';
+  p.aprovadoEm  = aprovar ? new Date().toISOString() : '';
+  saveProv();
+  if(aprovar){
+    // cria a ausência vinculada (se ainda não existir)
+    if(!CFG.ausencias.some(a=>a.origemProv===p.id)){
+      CFG.ausencias.push({usuario:p.usuario, tipo:'descanso', inicio:p.inicio, fim:p.fim, origemProv:p.id});
+    }
+    auditLog(`Aprovou descanso de ${userName(p.usuario)} (${p.inicio}–${p.fim}) — lançado como ausência`);
+  } else {
+    // remove a ausência vinculada
+    CFG.ausencias = CFG.ausencias.filter(a=>a.origemProv!==p.id);
+    auditLog(`Reverteu aprovação de descanso de ${userName(p.usuario)} (${p.inicio}–${p.fim}) — ausência removida`);
+  }
+  saveCfg();
+  if(typeof renderAdmin==='function') renderAdmin();
+}
+
+/* ---------- CADASTROS (admin) ---------- */
+function fmtDT(iso){ const d=new Date(iso); return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
+function fmtDia(s){ return new Date(s+'T00:00').toLocaleDateString('pt-BR'); }
+function escH(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function v(id){ return document.getElementById(id).value.trim(); }
+
+function renderAdmin(){
+  // popular seletor de pessoas (cadastro de usuários do arquivo)
+  const selP=document.getElementById('lcPessoa');
+  if(selP && !selP.dataset.filled){
+    selP.innerHTML=USUARIOS.map(u=>`<option value="${escH(u.usuario)}">${escH(u.nome)}</option>`).join('');
+    selP.dataset.filled='1';
+  }
+  const loc=document.getElementById('admLoc');
+  loc.innerHTML = LOCACAO.length ? LOCACAO.map((r,i)=>`<tr>
+    <td>${escH(r.nome||userName(r.usuario))}</td><td>${escH(r.cliente)}</td><td>${escH(r.projeto)}</td><td>${escH(r.gerente)}</td>
+    <td class="act-cell"><button class="del-rep" title="Remover" onclick="admDelLoc(${i})">✕</button></td></tr>`).join('')
+    : `<tr><td colspan="5" class="adm-empty">Nenhuma locação.</td></tr>`;
+  const fer=document.getElementById('admFer');
+  fer.innerHTML = CFG.feriados.length ? CFG.feriados.slice().sort((a,b)=>a.data<b.data?-1:1).map(f=>`<tr>
+    <td>${fmtDia(f.data)}</td><td>${escH(f.nome)}</td>
+    <td class="act-cell"><button class="del-rep" title="Remover" onclick="admDelFer('${f.data}')">✕</button></td></tr>`).join('')
+    : `<tr><td colspan="3" class="adm-empty">Nenhum feriado.</td></tr>`;
+  const aus=document.getElementById('admAus');
+  aus.innerHTML = CFG.ausencias.length ? CFG.ausencias.map((a,i)=>{
+    const linked=!!a.origemProv; // veio de um descanso aprovado
+    const sit = linked ? '<span class="prov-badge ok">descanso aprovado</span>'
+              : (a.tipo==='descanso'?'<span class="prov-badge ok">registrada</span>':'—');
+    const del = linked
+      ? `<button class="del-rep locked" title="Vinculada a um descanso aprovado — reverta na solicitação" disabled>✕</button>`
+      : `<button class="del-rep" title="Remover" onclick="admDelAus(${i})">✕</button>`;
+    return `<tr>
+      <td>${escH(userName(a.usuario))}</td><td style="text-transform:capitalize">${escH(a.tipo)}</td>
+      <td>${fmtDia(a.inicio)} – ${fmtDia(a.fim)}</td>
+      <td>${sit}</td>
+      <td class="act-cell">${del}</td></tr>`;
+  }).join('') : `<tr><td colspan="5" class="adm-empty">Nenhuma ausência.</td></tr>`;
+  const pv=document.getElementById('admProv');
+  pv.innerHTML = PROV.length ? PROV.slice().sort((a,b)=>a.inicio<b.inicio?1:-1).map(p=>{
+    const ap=p.status==='aprovado';
+    const aprovInfo = ap ? `${escH(p.aprovadoPor||'—')}${p.aprovadoEm?`<small class="ap-when">${fmtDT(p.aprovadoEm)}</small>`:''}` : '<span class="ap-none">—</span>';
+    return `<tr>
+      <td>${escH(userName(p.usuario))}</td>
+      <td>${fmtDia(p.inicio)} – ${fmtDia(p.fim)}</td>
+      <td>${p.dias}</td>
+      <td>${ap?`<span class="prov-badge ok">✔ aprovado</span>`:`<span class="prov-badge wait">⏳ em requerimento</span>`}</td>
+      <td>${aprovInfo}</td>
+      <td class="act-cell"><button class="btn-approve ${ap?'un':''}" onclick="aprovarProvisao('${p.id}')">${ap?'Reverter':'Aprovar'}</button></td></tr>`;
+  }).join('') : `<tr><td colspan="6" class="adm-empty">Nenhuma solicitação.</td></tr>`;
+  const au=document.getElementById('admAudit');
+  au.innerHTML = CFG._audit.length ? CFG._audit.map(a=>`<tr>
+    <td>${fmtDT(a.quando)}</td><td>${escH(a.admin)}</td><td>${escH(a.acao)}</td></tr>`).join('')
+    : `<tr><td colspan="3" class="adm-empty">Sem alterações registradas.</td></tr>`;
+}
+function admAddLoc(){
+  const u=v('lcPessoa'),c=v('lcCli'),p=v('lcProj'),g=v('lcGer');
+  if(!u||!c||!p){toast('Escolha a pessoa e preencha cliente e projeto');return;}
+  const nome=userName(u);
+  CFG.locacao.push({usuario:u,nome,cliente:c,projeto:p,gerente:g});
+  auditLog(`Adicionou locação: ${nome} · ${c}/${p}`); saveCfg();
+  ['lcCli','lcProj','lcGer'].forEach(id=>document.getElementById(id).value='');
+  renderAdmin(); toast('Locação adicionada');
+}
+function admDelLoc(i){
+  const r=CFG.locacao[i]; if(!r) return;
+  CFG.locacao.splice(i,1); auditLog(`Removeu locação: ${r.nome||r.usuario} · ${r.cliente}/${r.projeto}`); saveCfg(); renderAdmin();
+}
+function admAddFer(){
+  const d=v('frData'), n=v('frNome');
+  if(!d){toast('Informe a data');return;}
+  if(CFG.feriados.some(f=>f.data===d)){toast('Feriado já cadastrado');return;}
+  CFG.feriados.push({data:d,nome:n||'Feriado'});
+  auditLog(`Adicionou feriado: ${d} (${n||'Feriado'})`); saveCfg();
+  document.getElementById('frData').value=''; document.getElementById('frNome').value='';
+  renderAdmin(); toast('Feriado adicionado');
+}
+function admDelFer(data){
+  const f=CFG.feriados.find(x=>x.data===data);
+  CFG.feriados=CFG.feriados.filter(x=>x.data!==data);
+  auditLog(`Removeu feriado: ${data}${f?` (${f.nome})`:''}`); saveCfg(); renderAdmin();
+}
+function admAddAus(){
+  const u=v('auUser'),t=v('auTipo'),i=v('auIni'),f=v('auFim');
+  if(!u||!t||!i||!f){toast('Preencha todos os campos');return;}
+  if(f<i){toast('Fim antes do início');return;}
+  CFG.ausencias.push({usuario:u,tipo:t,inicio:i,fim:f});
+  auditLog(`Adicionou ausência: ${u} · ${t} ${i}–${f}`); saveCfg();
+  ['auUser','auTipo','auIni','auFim'].forEach(id=>document.getElementById(id).value='');
+  renderAdmin(); toast('Ausência adicionada');
+}
+function admDelAus(i){
+  const a=CFG.ausencias[i]; if(!a) return;
+  CFG.ausencias.splice(i,1); auditLog(`Removeu ausência: ${a.usuario} · ${a.tipo} ${a.inicio}–${a.fim}`); saveCfg(); renderAdmin();
+}
+
+/* ---------- TABS ---------- */
+function showTab(t){
+  document.getElementById('tabLancar').classList.toggle('active',t==='lancar');
+  document.getElementById('tabRel').classList.toggle('active',t==='rel');
+  const ta=document.getElementById('tabAdmin'); if(ta) ta.classList.toggle('active',t==='admin');
+  document.getElementById('viewLancar').classList.toggle('hidden',t!=='lancar');
+  document.getElementById('viewRel').classList.toggle('hidden',t!=='rel');
+  const va=document.getElementById('viewAdmin'); if(va) va.classList.toggle('hidden',t!=='admin');
+  if(t==='rel'){ if(!session.admin){showTab('lancar');return} buildReportFilters(); renderReport(); }
+  if(t==='admin'){ if(!session.admin){showTab('lancar');return} renderAdmin(); }
+  if(t==='lancar' && session.rows && session.rows.length){ render(); }
+}
+
+/* ---------- REPORT (admin) ---------- */
+function activeEntries(){return state.entries.filter(e=>!e.removed && !e.adminDeleted)}
+/* Base do relatório para TOTAIS/KPIs/resumo/gráfico: ativos + ausências virtuais */
+function reportEntries(){return activeEntries().concat(AusênciaEntries());}
+/* Base do DETALHAMENTO: inclui também os excluídos pelo Admin (riscados, com nota) */
+function reportDetailEntries(){
+  return state.entries.filter(e=>!e.removed).concat(AusênciaEntries());
+}
+function buildReportFilters(){
+  const es=reportEntries();
+  const users=[...new Set(USUARIOS.map(r=>r.usuario))];
+  const clis=[...new Set([...LOCACAO.map(r=>r.cliente), 'Interno'])];
+  const projs=[...new Set([...LOCACAO.map(r=>r.projeto), 'Ausência'])];
+  const months=[...new Set(es.map(e=>e.data.slice(0,7)))].sort().reverse();
+  fill('fUser',[['','Todos'],...users.map(u=>[u,userName(u)])]);
+  fill('fCli',[['','Todos'],...clis.map(c=>[c,c])]);
+  fill('fProj',[['','Todos'],...projs.map(p=>[p,p])]);
+  fill('fMes',[['','Todos'],...months.map(m=>[m,mesLabel(m)])]);
+  ['fUser','fCli','fProj','fMes','sumSort'].forEach(id=>{const el=document.getElementById(id);if(el)el.onchange=renderReport;});
+}
+function mesLabel(m){
+  const[y,mm]=m.split('-');
+  const nomes=['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+  return `${nomes[parseInt(mm,10)-1]}/${y}`;
+}
+function fill(id,pairs){document.getElementById(id).innerHTML=pairs.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}
+
+function renderReport(){
+  const fu=document.getElementById('fUser').value, fc=document.getElementById('fCli').value,
+        fp=document.getElementById('fProj').value, fm=document.getElementById('fMes').value;
+  const match=e=>(!fu||e.usuario===fu)&&(!fc||e.cliente===fc)&&(!fp||e.projeto===fp)&&(!fm||e.data.slice(0,7)===fm);
+  let rows=reportEntries().filter(match);               // ativos → totais/KPIs
+  let detailRows=reportDetailEntries().filter(match);   // + excluídos pelo admin → detalhamento
+  const total=rows.reduce((s,e)=>s+e.horas,0);
+  document.getElementById('rKpi').textContent=fmt(total);
+  document.getElementById('rCount').textContent=rows.length;
+  document.getElementById('rAvg').textContent=rows.length?fmt(total/rows.length):'0';
+  // table
+  const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const nameOf=userName;
+  const body=document.getElementById('repBody');
+  if(!detailRows.length){body.innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--ink-soft);padding:28px">Nenhum registro para os filtros.</td></tr>`;}
+  else body.innerHTML=detailRows.slice().sort((a,b)=>a.data<b.data?1:-1).map(e=>{
+    const isAus=e.origem==='Ausência';
+    const del=!!e.adminDeleted;
+    const off=!isAus && !del && Math.abs(e.horas-HORAS_DIA)>0.001;
+    let obsTxt;
+    if(del) obsTxt = `Excluído por ${e.deletedBy||'Admin'}`+(e.obs?` · ${e.obs}`:'');
+    else if(isAus) obsTxt = `Ausência (${e.obs})`;
+    else obsTxt = e.obs||'';
+    const obs = obsTxt ? esc(obsTxt) : '<span style="color:#c2c9cf">—</span>';
+    const rowCls = del ? ' class="row-del"' : (isAus ? ' class="row-aus"' : (off?' class="row-off"':''));
+    const projLabel = isAus ? `<span class="tag-aus">ausência</span>` : e.projeto;
+    // botão de exclusão só para admin e apenas em lançamentos reais (não ausência virtual)
+    const canDel = session.admin && !isAus;
+    const actBtn = canDel
+      ? `<button type="button" class="del-rep" title="${del?'Restaurar registro':'Excluir registro'}" onclick="adminDelete('${e.id}')">${del?'↺':'✕'}</button>`
+      : '';
+    return `<tr${rowCls}>
+    <td>${nameOf(e.usuario)}</td><td>${e.cliente}</td><td>${projLabel}</td>
+    <td>${new Date(e.data+'T00:00').toLocaleDateString('pt-BR')}</td>
+    <td class="num">${fmt(e.horas)} h</td>
+    <td class="obs-cell">${obs}</td>
+    <td class="act-cell">${actBtn}</td></tr>`;
+  }).join('');
+  document.getElementById('repTotal').textContent=fmt(total)+' h';
+  renderSummary(rows, fm, fu);
+  renderChart(rows);
+  // sincroniza calendário do relatório com filtro de mês
+  if(fm){const[yy,mm]=fm.split('-').map(Number);relRef=new Date(yy,mm-1,1);}
+  renderReportCalendar(rows);
+  renderReportRanking(rows);
+}
+function relCalMove(dir){relRef=new Date(relRef.getFullYear(),relRef.getMonth()+dir,1);renderReportCalendar(getFilteredRows());renderReportRanking(getFilteredRows());}
+function getFilteredRows(){
+  const fu=document.getElementById('fUser').value, fc=document.getElementById('fCli').value,
+        fp=document.getElementById('fProj').value, fm=document.getElementById('fMes').value;
+  return reportEntries().filter(e=>(!fu||e.usuario===fu)&&(!fc||e.cliente===fc)&&(!fp||e.projeto===fp)&&(!fm||e.data.slice(0,7)===fm));
+}
+function renderReportCalendar(rows){
+  const y=relRef.getFullYear(), m=relRef.getMonth();
+  document.getElementById('relCalMonth').textContent=relRef.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  const first=new Date(y,m,1).getDay();
+  const days=new Date(y,m+1,0).getDate();
+  const today=new Date(); today.setHours(0,0,0,0);
+  const fu=document.getElementById('fUser').value; // usuário selecionado?
+  // por dia: horas do usuário, tipo de ausência, e conjunto de usuários que lançaram
+  const perDay={}, ausDay={}, usersDay={};
+  rows.forEach(e=>{
+    const d=new Date(e.data+'T00:00');
+    if(d.getFullYear()!==y||d.getMonth()!==m) return;
+    const day=d.getDate();
+    if(e.origem==='Ausência'){ ausDay[day]=e.obs||'ausência'; }
+    else perDay[day]=(perDay[day]||0)+e.horas;
+    (usersDay[day]=usersDay[day]||new Set()).add(e.usuario);
+  });
+  let html=['dom','seg','ter','qua','qui','sex','sáb'].map(d=>`<div class="dow">${d}</div>`).join('');
+  for(let i=0;i<first;i++)html+='<div class="cell empty"></div>';
+  for(let d=1;d<=days;d++){
+    const date=new Date(y,m,d);const w=date.getDay();const wknd=(w===0||w===6);
+    const key=`${y}-${pad2(m+1)}-${pad2(d)}`;
+    const feriado=isFeriado(key);
+    const aus=ausDay[d];
+    const isToday=date.getTime()===today.getTime();
+    const logged=perDay[d];
+    const nUsers=usersDay[d]?usersDay[d].size:0;
+    let cls='cell '+(wknd?'wknd':'wday');
+    if(feriado) cls='cell feriado';
+    if(aus) cls='cell Ausência';
+    if(logged) cls='cell logged';
+    if(isToday) cls+=' today';
+    // rótulo da célula:
+    let tag='';
+    if(fu){
+      // usuário selecionado → mostra a descrição do lançamento do dia
+      if(aus) tag=`<span class="hh">${aus}</span>`;
+      else if(logged) tag=`<span class="hh">${fmt(logged)}h</span>`;
+      else if(feriado) tag=`<span class="hh">feriado</span>`;
+    } else {
+      // sem usuário → mostra quantos usuários lançaram no dia
+      if(nUsers>0) tag=`<span class="hh">${nUsers} usuário${nUsers>1?'s':''}</span>`;
+      else if(feriado) tag=`<span class="hh">feriado</span>`;
+    }
+    const titleParts=[];
+    if(feriado) titleParts.push('Feriado');
+    if(fu){
+      if(aus) titleParts.push(`Ausência: ${aus}`);
+      if(logged) titleParts.push(`${fmt(logged)}h lançadas`);
+    } else if(nUsers>0){
+      titleParts.push(`${nUsers} usuário${nUsers>1?'s':''} lançaram`);
+    }
+    const title = titleParts.join(' — ') || date.toLocaleDateString('pt-BR');
+    html+=`<div class="${cls}" title="${title}">${d}${tag}</div>`;
+  }
+  document.getElementById('relCal').innerHTML=html;
+}
+function renderReportRanking(rows){
+  const box=document.getElementById('relRanking');
+  const agg={};
+  rows.forEach(e=>{
+    const k=`${e.cliente}||${e.projeto}`;
+    if(!agg[k]) agg[k]={cliente:e.cliente,projeto:e.projeto,horas:0};
+    agg[k].horas+=e.horas;
+  });
+  const list=Object.values(agg).sort((a,b)=>b.horas-a.horas).slice(0,10);
+  if(!list.length){box.innerHTML=`<div class="empty-r">Sem dados para os filtros.</div>`;}
+  else{
+    const max=list[0].horas||1;
+    box.innerHTML=list.map((r,i)=>`
+      <div class="row">
+        <div class="rk">${i+1}</div>
+        <div class="info">
+          <div class="nm">${r.projeto}</div>
+          <div class="cl">${r.cliente}</div>
+          <div class="track"><div class="fill" style="width:${(r.horas/max)*100}%"></div></div>
+        </div>
+        <div class="hh">${fmt(r.horas)}<small>h</small></div>
+      </div>`).join('');
+  }
+  renderReportAbsences();
+}
+/* Ausências (usuário + período) que tocam o mês exibido no calendário do relatório,
+   respeitando os filtros de usuário e de mês. */
+function renderReportAbsences(){
+  const y=relRef.getFullYear(), m=relRef.getMonth();
+  const monthStart=`${y}-${pad2(m+1)}-01`;
+  const monthEnd=`${y}-${pad2(m+1)}-${pad2(new Date(y,m+1,0).getDate())}`;
+  const fu=document.getElementById('fUser').value;
+  document.getElementById('relAusMonth').textContent='— '+relRef.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  // ausência sobrepõe o mês se inicio<=fimDoMes && fim>=inicioDoMes
+  const list=AusênciaS.filter(a=>
+    (!fu || a.usuario.toLowerCase()===fu.toLowerCase()) &&
+    a.inicio<=monthEnd && a.fim>=monthStart
+  ).sort((a,b)=>a.inicio<b.inicio?-1:1);
+  const body=document.getElementById('relAusBody');
+  const fmtD=s=>new Date(s+'T00:00').toLocaleDateString('pt-BR');
+  if(!list.length){body.innerHTML=`<tr><td colspan="3" style="text-align:center;color:var(--ink-soft);padding:16px">Nenhuma ausência neste mês.</td></tr>`;return}
+  body.innerHTML=list.map(a=>`<tr class="row-aus">
+    <td>${userName(a.usuario)}</td>
+    <td style="text-transform:capitalize">${a.tipo}</td>
+    <td>${fmtD(a.inicio)} – ${fmtD(a.fim)}</td>
+  </tr>`).join('');
+}
+function renderSummary(rows, fm, fu){
+  const refMonth = fm || new Date().toISOString().slice(0,7);
+  const [yy,mm] = refMonth.split('-').map(Number);
+  // soma por usuário (linhas já filtradas)
+  const byUser={};
+  rows.forEach(e=>{byUser[e.usuario]=(byUser[e.usuario]||0)+e.horas});
+  // usuários a exibir: se há filtro de usuário, só ele; senão todos + os com lançamento
+  let candidatos = fu ? [fu] : [...new Set([...USUARIOS.map(x=>x.usuario), ...Object.keys(byUser)])];
+  let users=candidatos.map(u=>{
+    const lanc=byUser[u]||0;                      // sem horas => 0
+    const avail=availHoursFull(yy, mm-1, u);  // inclui dias de ausência (contam como lançados)
+    return {u, lanc, avail, div:lanc-avail};      // div>0 acima, div<0 abaixo
+  });
+  // ordenação
+  const sort=(document.getElementById('sumSort')||{}).value||'divergentes';
+  if(sort==='usuario') users.sort((a,b)=>userName(a.u).localeCompare(userName(b.u),'pt-BR'));
+  else if(sort==='lancadas') users.sort((a,b)=>b.lanc-a.lanc);
+  else users.sort((a,b)=>Math.abs(b.div)-Math.abs(a.div)); // divergentes (módulo)
+  const body=document.getElementById('repSummary');
+  if(!users.length){body.innerHTML=`<tr><td colspan="4" style="text-align:center;color:var(--ink-soft);padding:24px">Sem dados.</td></tr>`;return}
+  body.innerHTML=users.map(r=>{
+    const cls = r.div>0.001 ? 'sum-over' : (r.div<-0.001 ? 'sum-under' : 'sum-exact');
+    const divTxt = r.div>0.001 ? `+${fmt(r.div)}` : (r.div<-0.001 ? `${fmt(r.div)}` : '0');
+    return `<tr class="${cls}"><td>${userName(r.u)}</td>
+      <td class="num">${fmt(r.lanc)} h</td>
+      <td class="num" style="font-weight:400;color:var(--ink-soft)">${fmt(r.avail)} h</td>
+      <td class="num">${divTxt} h</td></tr>`;
+  }).join('');
+}
+function renderChart(rows){
+  const svg=document.getElementById('chart');
+  // agrega por mês/ano (YYYY-MM)
+  const byMonth={};
+  rows.forEach(e=>{const mk=e.data.slice(0,7);byMonth[mk]=(byMonth[mk]||0)+e.horas});
+  const months=Object.keys(byMonth).sort();
+  const W=720,H=250,pad={l:40,r:16,t:18,b:34};
+  if(months.length===0){svg.innerHTML=`<text x="${W/2}" y="${H/2}" text-anchor="middle" fill="#9aa4ad" font-size="14">Sem dados para exibir</text>`;return}
+  const vals=months.map(mk=>byMonth[mk]);
+  const maxV=Math.max(...vals,1);
+  const iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+  const X=i=>months.length===1?pad.l+iw/2:pad.l+(i/(months.length-1))*iw;
+  const Y=v=>pad.t+ih-(v/maxV)*ih;
+  const lbl=mk=>{const[y,m]=mk.split('-');return new Date(y,m-1,1).toLocaleDateString('pt-BR',{month:'short',year:'2-digit'}).replace('.','')};
+  // gridlines
+  let g='';
+  for(let s=0;s<=4;s++){const v=maxV*s/4;const y=Y(v);
+    g+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#eef1f3"/>`;
+    g+=`<text x="${pad.l-8}" y="${y+4}" text-anchor="end" font-size="10" fill="#9aa4ad">${fmt(v)}</text>`;}
+  // path
+  const pts=months.map((mk,i)=>`${X(i)},${Y(byMonth[mk])}`);
+  const line=`<polyline fill="none" stroke="#ff4713" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" points="${pts.join(' ')}"/>`;
+  const area=`<polygon fill="#ff4713" fill-opacity="0.08" points="${pad.l},${pad.t+ih} ${pts.join(' ')} ${X(months.length-1)},${pad.t+ih}"/>`;
+  const dots=months.map((mk,i)=>`<circle cx="${X(i)}" cy="${Y(byMonth[mk])}" r="4" fill="#fff" stroke="#ff4713" stroke-width="2"><title>${lbl(mk)}: ${fmt(byMonth[mk])}h</title></circle>`).join('');
+  // valores sobre os pontos
+  const vlabels=months.map((mk,i)=>`<text x="${X(i)}" y="${Y(byMonth[mk])-9}" text-anchor="middle" font-size="10" font-weight="700" fill="#ff4713">${fmt(byMonth[mk])}</text>`).join('');
+  // x labels (todos os meses; se muitos, espaça)
+  const step=Math.ceil(months.length/10);
+  const xl=months.map((mk,i)=> i%step===0? `<text x="${X(i)}" y="${H-12}" text-anchor="middle" font-size="10" fill="#9aa4ad">${lbl(mk)}</text>`:'').join('');
+  svg.innerHTML=g+area+line+dots+vlabels+xl;
+}
+
+/* ---------- INIT ---------- */
+document.getElementById('loginUser').addEventListener('keydown',e=>{if(e.key==='Enter')doDevLogin()});
+document.getElementById('inHoras').addEventListener('input',()=>{if(session)refreshStars()});
+document.getElementById('inData').addEventListener('change',()=>{if(session){const v=document.getElementById('inData').value;if(v){const[y,m]=v.split('-').map(Number);if(y!==calRef.getFullYear()||m-1!==calRef.getMonth())calRef=new Date(y,m-1,1);}render();}});
+document.getElementById('inProjeto').addEventListener('change',()=>{if(session)refreshStars()});
+document.getElementById('provIni').addEventListener('change',()=>{if(session)renderProvisao()});
+document.getElementById('provFim').addEventListener('change',()=>{if(session)renderProvisao()});
+tryRestore();
+// inicializa Google se a lib já carregou; senão aguarda o onload do script GSI
+if(window.google&&google.accounts) initGoogleLogin();
+window.onGoogleLibLoad = initGoogleLogin;
+</script>
+</body>
+</html>
