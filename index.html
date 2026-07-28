@@ -466,7 +466,7 @@ svg.chart{width:100%;height:250px;display:block}
   <!-- ---- TAB: LANÇAR ---- -->
   <div class="wrap" id="viewLancar">
     <div class="notice hidden" id="noLoc">
-      <b>Sem locação vinculada.</b> Seu usuário tem acesso, mas não há cliente/projeto atribuído na aba <em>Locação</em>. Fale com seu gerente para incluir sua locação — enquanto isso não é possível lançar horas.
+      <b>Sem alocação vinculada.</b> Seu usuário tem acesso, mas não há cliente/projeto atribuído na aba <em>Alocação</em>. Fale com seu gerente para incluir sua alocação — enquanto isso não é possível lançar horas.
     </div>
     <div class="kpis">
       <div class="kpi lit"><div class="lb">Horas lançadas no mês</div><div class="vl"><span id="kLog">0</span><span class="un"> h</span></div><div class="bar" id="kLogBar"></div></div>
@@ -651,9 +651,9 @@ svg.chart{width:100%;height:250px;display:block}
       <div class="card-h"><h2>Cadastros</h2><span class="sub">gestão de dados — somente admin. Toda alteração é registrada com autor, data e hora.</span></div>
     </div>
 
-    <!-- Locação -->
+    <!-- Alocação -->
     <div class="card" style="margin-bottom:22px">
-      <div class="card-h"><h2>Locação</h2><span class="sub">usuário · cliente · projeto · gerente</span></div>
+      <div class="card-h"><h2>Alocação</h2><span class="sub">usuário · cliente · projeto · gerente</span></div>
       <div class="card-b">
         <table class="rep adm-table"><thead><tr><th>Pessoa</th><th>Cliente</th><th>Projeto</th><th>Gerente</th><th></th></tr></thead>
           <tbody id="admLoc"></tbody></table>
@@ -722,7 +722,7 @@ svg.chart{width:100%;height:250px;display:block}
 <script>
 /* ============================================================
    BASE — lida diretamente das abas do arquivo base_dojo.xlsx
-   Locação: quem pode apontar (usuario→cliente→projeto)
+   Alocação: quem pode apontar (usuario→cliente→projeto)
    Usuários: quem pode logar + nível de acesso (ADMIN libera relatório)
    ============================================================ */
 /* ============================================================
@@ -787,7 +787,7 @@ function AusênciaEntries(){
 }
 const isAdmin = u => USUARIOS.some(x=>x.usuario.toLowerCase()===u.toLowerCase() && String(x.acesso).trim().toUpperCase()==="ADMIN");
 const userName = u => {const x=USUARIOS.find(r=>r.usuario.toLowerCase()===u.toLowerCase())||LOCACAO.find(r=>r.usuario.toLowerCase()===u.toLowerCase());return x?x.nome:u;};
-/* gerente do usuário (a partir da Locação) */
+/* gerente do usuário (a partir da Alocação) */
 const gerenteDe = u => {const r=LOCACAO.find(x=>x.usuario.toLowerCase()===String(u).toLowerCase());return r?r.gerente:'';};
 
 /* ---------- PROVISÃO DE DESCANSO ----------
@@ -884,7 +884,7 @@ function ymd(d){return d.toISOString().slice(0,10)}
       navegador, o que serve para experiência de uso, não como barreira
       real. Em produção, o token (credential JWT) devolvido pelo Google
       DEVE ser validado no servidor antes de liberar dados. Enquanto não
-      houver backend, "admin" e "cada um vê sua locação" são apenas de
+      houver backend, "admin" e "cada um vê sua alocação" são apenas de
       interface. O ponto marcado // TODO(backend) abaixo é onde o envio
       ao servidor entra.
    5) Em produção, oculte o bloco de "acesso de teste" (id="devLogin").
@@ -968,7 +968,7 @@ function enterApp(){
   render();
 }
 
-/* ---------- SELECTS (only user's locação) ---------- */
+/* ---------- SELECTS (only user's alocação) ---------- */
 function myRows(){return session.rows}
 function myClientes(){return [...new Set(myRows().map(r=>r.cliente))]}
 function myProjetos(cli){return [...new Set(myRows().filter(r=>r.cliente===cli).map(r=>r.projeto))]}
@@ -1344,7 +1344,7 @@ function renderAdmin(){
   loc.innerHTML = LOCACAO.length ? LOCACAO.map((r,i)=>`<tr>
     <td>${escH(r.nome||userName(r.usuario))}</td><td>${escH(r.cliente)}</td><td>${escH(r.projeto)}</td><td>${escH(r.gerente)}</td>
     <td class="act-cell"><button class="del-rep" title="Remover" onclick="admDelLoc(${i})">✕</button></td></tr>`).join('')
-    : `<tr><td colspan="5" class="adm-empty">Nenhuma locação.</td></tr>`;
+    : `<tr><td colspan="5" class="adm-empty">Nenhuma alocação.</td></tr>`;
   const fer=document.getElementById('admFer');
   fer.innerHTML = CFG.feriados.length ? CFG.feriados.slice().sort((a,b)=>a.data<b.data?-1:1).map(f=>`<tr>
     <td>${fmtDia(f.data)}</td><td>${escH(f.nome)}</td>
@@ -1386,13 +1386,13 @@ function admAddLoc(){
   if(!u||!c||!p){toast('Escolha a pessoa e preencha cliente e projeto');return;}
   const nome=userName(u);
   CFG.locacao.push({usuario:u,nome,cliente:c,projeto:p,gerente:g});
-  auditLog(`Adicionou locação: ${nome} · ${c}/${p}`); saveCfg();
+  auditLog(`Adicionou alocação: ${nome} · ${c}/${p}`); saveCfg();
   ['lcCli','lcProj','lcGer'].forEach(id=>document.getElementById(id).value='');
-  renderAdmin(); toast('Locação adicionada');
+  renderAdmin(); toast('Alocação adicionada');
 }
 function admDelLoc(i){
   const r=CFG.locacao[i]; if(!r) return;
-  CFG.locacao.splice(i,1); auditLog(`Removeu locação: ${r.nome||r.usuario} · ${r.cliente}/${r.projeto}`); saveCfg(); renderAdmin();
+  CFG.locacao.splice(i,1); auditLog(`Removeu alocação: ${r.nome||r.usuario} · ${r.cliente}/${r.projeto}`); saveCfg(); renderAdmin();
 }
 function admAddFer(){
   const d=v('frData'), n=v('frNome');
