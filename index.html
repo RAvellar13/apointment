@@ -752,6 +752,9 @@ function auditLog(acao){
 const LOCACAO = CFG.locacao;      // {usuario,nome,cliente,projeto,gerente}
 const USUARIOS = [
   {usuario:"raphael.avellar@dojo.technology", nome:"Raphael Avellar", acesso:"ADMIN",   inicio:"2022-10-01", termino:""},
+  {usuario:"joao.bento@dojo.technology", nome:"João Bento", acesso:"padrão",   inicio:"2026-08-01", termino:""},
+  {usuario:"ze.silva@dojo.technology", nome:"Zé da Silva", acesso:"padrão",   inicio:"2026-05-01", termino:""},
+  {usuario:"maria.souza@dojo.technology", nome:"Maria Souza", acesso:"padrão",   inicio:"2022-10-01", termino:"2026-06-01"},
   {usuario:"carlos.bochnia@dojo.technology",  nome:"Carlos Bochnia",  acesso:"gerente", inicio:"2024-01-10", termino:""}
 ];
 const userRec = u => USUARIOS.find(r=>r.usuario.toLowerCase()===String(u).toLowerCase());
