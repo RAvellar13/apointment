@@ -374,10 +374,7 @@ table.adm-table td{padding:9px 10px;border-bottom:1px solid var(--line);font-wei
 table.adm-table td.adm-empty{text-align:center;color:var(--ink-soft);padding:18px}
 table.adm-table td.act-cell{width:44px;text-align:center}
 .adm-form{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:6px;border-top:1px dashed var(--line)}
-.adm-form .txt,.adm-form .date,.adm-form .sel{width:auto;flex:1;min-width:130px;padding:9px 11px}
-.btn-export{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:9px;font-size:12.5px;font-weight:600;background:var(--card);color:var(--accent);border:1px solid var(--accent);cursor:pointer;transition:.15s;white-space:nowrap}
-.card-h > .btn-export{margin-left:auto}
-.btn-export:hover{background:var(--accent);color:#fff}
+.adm-form .txt,.adm-form .date{width:auto;flex:1;min-width:130px;padding:9px 11px}
 .adm-form .btn{flex:0 0 auto}
 .btn-approve{padding:7px 14px;border-radius:8px;font-size:12.5px;font-weight:700;background:var(--ok);color:#fff;border:none;cursor:pointer}
 .btn-approve:hover{filter:brightness(1.05)}
@@ -612,7 +609,7 @@ svg.chart{width:100%;height:250px;display:block}
 
     <div class="rep-grid" style="margin-top:22px">
       <div class="card">
-        <div class="card-h"><h2>Detalhamento</h2><button class="btn-export" onclick="exportDetalhamento()">↓ Exportar CSV</button></div>
+        <div class="card-h"><h2>Detalhamento</h2></div>
         <div class="card-b">
           <table class="rep">
             <thead><tr><th>Usuário</th><th>Cliente</th><th>Projeto</th><th>Data</th><th style="text-align:right">Horas</th><th>Observação</th><th></th></tr></thead>
@@ -691,7 +688,7 @@ svg.chart{width:100%;height:250px;display:block}
         <table class="rep adm-table"><thead><tr><th>Usuário</th><th>Tipo</th><th>Período</th><th>Situação</th><th></th></tr></thead>
           <tbody id="admAus"></tbody></table>
         <div class="adm-form">
-          <select class="sel" id="auPessoa"></select>
+          <input class="txt" id="auUser" placeholder="usuario@dojo.technology">
           <input class="txt" id="auTipo" placeholder="tipo (descanso, licença…)">
           <input type="date" class="date" id="auIni">
           <input type="date" class="date" id="auFim">
@@ -711,13 +708,7 @@ svg.chart{width:100%;height:250px;display:block}
 
     <!-- Auditoria -->
     <div class="card">
-      <div class="card-h">
-        <h2>Registro de alterações</h2><span class="sub">quem alterou, o quê e quando</span>
-        <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-          <select class="sel" id="fAudAdmin" style="padding:6px 10px;font-size:12.5px" onchange="renderAdmin()"><option value="">Todos os admins</option></select>
-          <button class="btn-export" onclick="exportAuditoria()">↓ Exportar CSV</button>
-        </div>
-      </div>
+      <div class="card-h"><h2>Registro de alterações</h2><span class="sub">quem alterou, o quê e quando</span></div>
       <div class="card-b">
         <table class="rep adm-table"><thead><tr><th>Quando</th><th>Admin</th><th>Ação</th></tr></thead>
           <tbody id="admAudit"></tbody></table>
@@ -942,12 +933,6 @@ function loginAs(email){
   if(!u){err.textContent="Informe seu usuário.";return false}
   const acc = USUARIOS.find(r=>r.usuario.toLowerCase()===u);
   if(!acc){err.textContent="Conta não encontrada na base de usuários. Fale com o gestor.";return false}
-  // bloqueia acesso se o término da vigência for anterior a hoje (exceto admin)
-  if(!isAdmin(acc.usuario) && vigenciaEncerrada(acc.usuario)){
-    const t=userWindow(acc.usuario).termino;
-    err.textContent=`Acesso encerrado em ${new Date(t+'T00:00').toLocaleDateString('pt-BR')}. Fale com o gestor.`;
-    return false;
-  }
   const rows = LOCACAO.filter(r=>r.usuario.toLowerCase()===u);
   session = {usuario:acc.usuario, nome:acc.nome, admin:isAdmin(acc.usuario), rows};
   localStorage.setItem(SESS_KEY, session.usuario);
@@ -967,16 +952,7 @@ function tryRestore(){
   const u = localStorage.getItem(SESS_KEY);
   if(!u) return;
   const acc = USUARIOS.find(r=>r.usuario.toLowerCase()===u.toLowerCase());
-  if(!acc) return;
-  if(!isAdmin(acc.usuario) && vigenciaEncerrada(acc.usuario)){ localStorage.removeItem(SESS_KEY); return; }
-  const rows=LOCACAO.filter(r=>r.usuario.toLowerCase()===u.toLowerCase());
-  session={usuario:acc.usuario,nome:acc.nome,admin:isAdmin(acc.usuario),rows};enterApp();
-}
-/* vigência encerrada = término preenchido e anterior a hoje */
-function vigenciaEncerrada(u){
-  const t=userWindow(u).termino; if(!t) return false;
-  const hoje=ymd(new Date());
-  return t<hoje;
+  if(acc){const rows=LOCACAO.filter(r=>r.usuario.toLowerCase()===u.toLowerCase());session={usuario:acc.usuario,nome:acc.nome,admin:isAdmin(acc.usuario),rows};enterApp()}
 }
 
 function enterApp(){
@@ -987,11 +963,6 @@ function enterApp(){
   document.getElementById('tabRel').classList.toggle('hidden', !session.admin);
   document.getElementById('tabAdmin').classList.toggle('hidden', !session.admin);
   document.getElementById('inData').value = ymd(new Date());
-  // limita o seletor de data à vigência do usuário
-  const win=userWindow(session.usuario);
-  const inData=document.getElementById('inData');
-  if(win.inicio) inData.min=win.inicio; else inData.removeAttribute('min');
-  if(win.termino) inData.max=win.termino; else inData.removeAttribute('max');
   calRef = new Date();
   const hasLoc = session.rows.length>0;
   document.getElementById('viewLancar').classList.toggle('no-loc', !hasLoc);
@@ -1067,10 +1038,6 @@ function addEntry(){
   if(!cli||!proj){toast("Selecione cliente e projeto");return}
   if(!data){toast("Informe a data");return}
   if(!horas||horas<=0){toast("Informe as horas");return}
-  // não pode lançar antes do início nem depois do término da vigência
-  const {inicio,termino}=userWindow(session.usuario);
-  if(inicio && data<inicio){toast(`Não é possível lançar antes de ${new Date(inicio+'T00:00').toLocaleDateString('pt-BR')}`);return}
-  if(termino && data>termino){toast(`Não é possível lançar após ${new Date(termino+'T00:00').toLocaleDateString('pt-BR')}`);return}
   state.entries.push({id:Date.now()+Math.random(), usuario:session.usuario, cliente:cli, projeto:proj, data, horas, removed:false});
   save();
   // mantém as horas favoritas preenchidas; senão limpa
@@ -1370,20 +1337,11 @@ function escH(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g
 function v(id){ return document.getElementById(id).value.trim(); }
 
 function renderAdmin(){
-  // seletor de pessoas (Alocação): exclui quem tem término anterior a hoje
+  // popular seletor de pessoas (cadastro de usuários do arquivo)
   const selP=document.getElementById('lcPessoa');
-  if(selP){
-    const prev=selP.value;
-    const ativos=USUARIOS.filter(u=>!vigenciaEncerrada(u.usuario));
-    selP.innerHTML=ativos.map(u=>`<option value="${escH(u.usuario)}">${escH(u.nome)}</option>`).join('');
-    if(prev && ativos.some(u=>u.usuario===prev)) selP.value=prev;
-  }
-  // seletor de pessoas (Ausências): mesmo mecanismo, todos os cadastrados
-  const selA=document.getElementById('auPessoa');
-  if(selA){
-    const prev=selA.value;
-    selA.innerHTML=USUARIOS.map(u=>`<option value="${escH(u.usuario)}">${escH(u.nome)}</option>`).join('');
-    if(prev) selA.value=prev;
+  if(selP && !selP.dataset.filled){
+    selP.innerHTML=USUARIOS.map(u=>`<option value="${escH(u.usuario)}">${escH(u.nome)}</option>`).join('');
+    selP.dataset.filled='1';
   }
   const loc=document.getElementById('admLoc');
   loc.innerHTML = LOCACAO.length ? LOCACAO.map((r,i)=>`<tr>
@@ -1422,29 +1380,9 @@ function renderAdmin(){
       <td class="act-cell"><button class="btn-approve ${ap?'un':''}" onclick="aprovarProvisao('${p.id}')">${ap?'Reverter':'Aprovar'}</button></td></tr>`;
   }).join('') : `<tr><td colspan="6" class="adm-empty">Nenhuma solicitação.</td></tr>`;
   const au=document.getElementById('admAudit');
-  // popular filtro de admin (preservando seleção)
-  const fAud=document.getElementById('fAudAdmin');
-  if(fAud){
-    const sel=fAud.value;
-    const admins=[...new Set(CFG._audit.map(a=>a.admin))];
-    fAud.innerHTML=`<option value="">Todos os admins</option>`+admins.map(a=>`<option value="${escH(a)}"${a===sel?' selected':''}>${escH(a)}</option>`).join('');
-  }
-  const fAudV=fAud?fAud.value:'';
-  const auditRows=CFG._audit.filter(a=>!fAudV||a.admin===fAudV);
-  au.innerHTML = auditRows.length ? auditRows.map(a=>`<tr>
+  au.innerHTML = CFG._audit.length ? CFG._audit.map(a=>`<tr>
     <td>${fmtDT(a.quando)}</td><td>${escH(a.admin)}</td><td>${escH(a.acao)}</td></tr>`).join('')
     : `<tr><td colspan="3" class="adm-empty">Sem alterações registradas.</td></tr>`;
-}
-function exportAuditoria(){
-  const fAud=document.getElementById('fAudAdmin');
-  const fAudV=fAud?fAud.value:'';
-  const rows=CFG._audit.filter(a=>!fAudV||a.admin===fAudV);
-  if(!rows.length){toast('Nada para exportar');return;}
-  const headers=['Quando','Admin','Ação'];
-  const linhas=rows.map(a=>[fmtDT(a.quando), a.admin, a.acao]);
-  const suf=fAudV?('_'+fAudV.replace(/\s+/g,'_')):'';
-  downloadCSV(`registro_alteracoes${suf}.csv`, headers, linhas);
-  toast('Registro exportado');
 }
 function admAddLoc(){
   const u=v('lcPessoa'),c=v('lcCli'),p=v('lcProj'),g=v('lcGer');
@@ -1474,12 +1412,12 @@ function admDelFer(data){
   auditLog(`Removeu feriado: ${data}${f?` (${f.nome})`:''}`); saveCfg(); renderAdmin();
 }
 function admAddAus(){
-  const u=v('auPessoa'),t=v('auTipo'),i=v('auIni'),f=v('auFim');
-  if(!u||!t||!i||!f){toast('Escolha a pessoa e preencha tipo e período');return;}
+  const u=v('auUser'),t=v('auTipo'),i=v('auIni'),f=v('auFim');
+  if(!u||!t||!i||!f){toast('Preencha todos os campos');return;}
   if(f<i){toast('Fim antes do início');return;}
   CFG.ausencias.push({usuario:u,tipo:t,inicio:i,fim:f});
-  auditLog(`Adicionou ausência: ${userName(u)} · ${t} ${i}–${f}`); saveCfg();
-  ['auTipo','auIni','auFim'].forEach(id=>document.getElementById(id).value='');
+  auditLog(`Adicionou ausência: ${u} · ${t} ${i}–${f}`); saveCfg();
+  ['auUser','auTipo','auIni','auFim'].forEach(id=>document.getElementById(id).value='');
   renderAdmin(); toast('Ausência adicionada');
 }
 function admDelAus(i){
@@ -1578,50 +1516,6 @@ function getFilteredRows(){
   const fu=document.getElementById('fUser').value, fc=document.getElementById('fCli').value,
         fp=document.getElementById('fProj').value, fm=document.getElementById('fMes').value;
   return reportEntries().filter(e=>(!fu||e.usuario===fu)&&(!fc||e.cliente===fc)&&(!fp||e.projeto===fp)&&(!fm||e.data.slice(0,7)===fm));
-}
-/* filtros do detalhamento (inclui excluídos pelo admin) */
-function getFilteredDetailRows(){
-  const fu=document.getElementById('fUser').value, fc=document.getElementById('fCli').value,
-        fp=document.getElementById('fProj').value, fm=document.getElementById('fMes').value;
-  return reportDetailEntries().filter(e=>(!fu||e.usuario===fu)&&(!fc||e.cliente===fc)&&(!fp||e.projeto===fp)&&(!fm||e.data.slice(0,7)===fm));
-}
-/* ---------- EXPORTAÇÃO CSV ---------- */
-function csvCell(v){ v=String(v==null?'':v); return /[";\n]/.test(v) ? `"${v.replace(/"/g,'""')}"` : v; }
-function downloadCSV(nome, headers, linhas){
-  const bom='\ufeff'; // acentos no Excel
-  const sep=';';
-  const conteudo=[headers.map(csvCell).join(sep), ...linhas.map(r=>r.map(csvCell).join(sep))].join('\r\n');
-  const blob=new Blob([bom+conteudo],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url; a.download=nome; document.body.appendChild(a); a.click();
-  document.body.removeChild(a); URL.revokeObjectURL(url);
-}
-function sufixoFiltros(){
-  const fu=document.getElementById('fUser').value, fc=document.getElementById('fCli').value,
-        fp=document.getElementById('fProj').value, fm=document.getElementById('fMes').value;
-  const parts=[];
-  if(fu) parts.push(userName(fu).replace(/\s+/g,'_'));
-  if(fc) parts.push(fc);
-  if(fp) parts.push(fp);
-  if(fm) parts.push(fm);
-  return parts.length?('_'+parts.join('-')):'';
-}
-function exportDetalhamento(){
-  const rows=getFilteredDetailRows().slice().sort((a,b)=>a.data<b.data?1:-1);
-  if(!rows.length){toast('Nada para exportar');return;}
-  const headers=['Usuário','Cliente','Projeto','Data','Horas','Observação'];
-  const linhas=rows.map(e=>{
-    const isAus=e.origem==='Ausência';
-    let obs;
-    if(e.adminDeleted) obs=`Excluído por ${e.deletedBy||'Admin'}`+(e.obs?` · ${e.obs}`:'');
-    else if(isAus) obs=`Ausência (${e.obs})`;
-    else obs=e.obs||'';
-    return [userName(e.usuario), e.cliente, isAus?'Ausência':e.projeto,
-            new Date(e.data+'T00:00').toLocaleDateString('pt-BR'), fmt(e.horas), obs];
-  });
-  downloadCSV(`detalhamento${sufixoFiltros()}.csv`, headers, linhas);
-  toast('Detalhamento exportado');
 }
 function renderReportCalendar(rows){
   const y=relRef.getFullYear(), m=relRef.getMonth();
